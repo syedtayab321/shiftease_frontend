@@ -86,15 +86,23 @@ body{
     margin-top: 3px;
     display: flex;
     width: 80%;
-    height: 99%;
-    background-color: #fff;
+    height: 95%;
+    background-color: #ffffff;
     border-radius: 10px;
-    padding: 15px;
-    overflow-y: scroll;
+    padding: 20px;
+}
+.Image-section{
+    width: 45%;
+    height: 100%;
+}
+.Image-section img{
+    width: 100%;
+    height: 100%;
 }
 .signup-section {
-    padding: 10px;
-    width: 100%;
+    padding: 20px;
+    width: 55%;
+    overflow-y: scroll;
 }
 
 .signup-section h2 {
@@ -176,14 +184,17 @@ body{
     text-decoration: none;
 }
 @media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
+    .Image-section
+    {
+        display: none;
     }
     .signup-container{
         overflow: scroll;
         width: 550px;
+        padding: 10px;
     }
     .signup-section{
+        width: 100%;
         overflow: scroll;
     }
     .main-signup-section{

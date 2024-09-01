@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Spinner } from 'react-bootstrap';
+import logo from './../../assets/images/logo_back.png'
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ const SignUp = () => {
   return (
     <div className='main-signup-section'>
       <div className="signup-container">
+        <div className='Image-section'>
+           <img src={logo}/>
+        </div>
         <div className="signup-section">
           <h2>Create an account</h2>
           <p>Sign up to access our services:</p>
@@ -68,7 +72,6 @@ const SignUp = () => {
           >
             {({ errors }) => (
               <Form>
-                <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <Field
@@ -89,8 +92,6 @@ const SignUp = () => {
                     />
                     <ErrorMessage name="company" component="div" className="error text text-danger" />
                   </div>
-                </div>
-                <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="location">Location</label>
                     <Field
@@ -112,8 +113,6 @@ const SignUp = () => {
                     </Field>
                     <ErrorMessage name="services" component="div" className="error text text-danger" />
                   </div>
-                </div>
-                <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="phone">Mobile Number</label>
                     <div className="phone-input">
@@ -141,8 +140,6 @@ const SignUp = () => {
                     />
                     <ErrorMessage name="zipcode" component="div" className="error text text-danger" />
                   </div>
-                </div>
-                <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <Field
@@ -163,7 +160,6 @@ const SignUp = () => {
                     />
                     <ErrorMessage name="confirmPassword" component="div" className="error text text-danger" />
                   </div>
-                </div>
 
                 <button type="submit" className="sign-up-btn" disabled={isSubmitting}>
                   {isSubmitting ? (
