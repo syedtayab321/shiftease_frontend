@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import "./assets/css/style.css";
+import { Route, Routes } from "react-router-dom";
+import MainPage from "./components/pages/MainPage";
+import ProviderLogin from "./components/pages/Login";
+import SignUp from "./components/pages/SignUp";
+import Confirmation from "./components/pages/Confirmation";
+import Dashboard from "./ProviderModule/Dashboard";
+import AdminLogin from "./AdminModule/AdminLogin";
+import AdminDashboard from "./AdminModule/AdminDashboard";
+import React from "react";
+import Rejection from "./components/pages/Rejection";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" Component={MainPage}></Route>
+        <Route path='/login' Component={ProviderLogin}></Route>
+        <Route path='/sign-up' Component={SignUp}></Route>
+        <Route path='/confirmation' Component={Confirmation}></Route>
+        <Route path='/dashboard' Component={Dashboard}></Route>
+        <Route path='/admin' Component={AdminLogin}></Route>
+        <Route path='/admindashboard' Component={AdminDashboard}></Route>
+        <Route path='/rejection' Component={Rejection}></Route>
+      </Routes>
+    </>
   );
 }
 

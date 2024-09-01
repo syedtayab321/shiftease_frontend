@@ -1,0 +1,125 @@
+.client-requests-container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.client-requests-header {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.client-requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.client-requests-table th,
+.client-requests-table td {
+  border: 1px solid #ddd;
+  padding: 2px 8px;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+}
+
+.client-requests-table th {
+  background-color: #3c91e6;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.client-requests-table tr {
+  transition: background-color 0.3s ease;
+}
+
+.client-requests-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.client-requests-approve-button,
+.client-requests-reject-button {
+  padding: 2px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  margin: 0 5px;
+  transition: background-color 0.3s ease;
+}
+
+.client-requests-approve-button {
+  background-color: #28a745;
+}
+
+.client-requests-approve-button:hover {
+  background-color: #218838;
+}
+
+.client-requests-reject-button {
+  background-color: #dc3545;
+}
+
+.client-requests-reject-button:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .client-requests-container {
+    padding: 15px;
+  }
+
+  .client-requests-table th,
+  .client-requests-table td {
+    padding: 10px 12px;
+  }
+
+  .client-requests-approve-button,
+  .client-requests-reject-button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+.search-bar-container {
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.client-requests-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.client-requests-table th, .client-requests-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.client-requests-approve-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.client-requests-reject-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.client-requests-header {
+  margin-bottom: 20px;
+}

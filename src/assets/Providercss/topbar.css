@@ -1,0 +1,57 @@
+.custom-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #343a40;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-radius: 20px;
+}
+
+.custom-topbar-title h1 {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 600;
+  color: #f8f9fa;
+}
+
+.custom-topbar-user {
+  display: flex;
+  align-items: center;
+}
+
+.custom-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 2px solid #6c757d;
+}
+
+.custom-username {
+  font-size: 16px;
+  margin-right: 20px;
+}
+
+.custom-logout-btn {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-logout-btn:hover {
+  background-color: #c82333;
+}
+
+.custom-logout-icon {
+  margin-right: 5px;
+}

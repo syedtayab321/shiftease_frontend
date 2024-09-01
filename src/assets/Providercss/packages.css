@@ -1,0 +1,129 @@
+/* packages.css */
+.container {
+  padding: 20px;
+  max-width: 100%;
+}
+
+.header {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.controls .addButton {
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+  height: 40px;
+}
+
+.searchBar {
+  width: 300px;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.packageCard {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.packageImage {
+  height: 200px;
+  object-fit: cover;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.addButton, .searchBar {
+  margin-bottom: 20px;
+}
+
+.header {
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+.add-package-modal {
+  font-family: 'Poppins', sans-serif;
+}
+
+.add-package-header {
+  background-color: #007bff;
+  color: #fff;
+  border-bottom: none;
+}
+
+.add-package-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.add-package-body {
+  padding: 20px;
+}
+
+.form-group-custom {
+  margin-bottom: 2.5rem;
+}
+
+.form-label-custom {
+  font-weight: 600;
+  color: #343a40;
+}
+
+.form-control-custom {
+  border-radius: 0.375rem;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+}
+
+.form-control-custom:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.feedback-custom {
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.add-package-footer {
+  border-top: none;
+  padding: 1.25rem;
+  justify-content: space-between;
+}
+
+.close-button-custom {
+  background-color: #6c757d;
+  border: none;
+}
+
+.submit-button-custom {
+  background-color: #007bff;
+  border: none;
+}
+
+.submit-button-custom:hover {
+  background-color: #0056b3;
+}
+
+.close-button-custom:hover {
+  background-color: #5a6268;
+}
+
+.container .searchBar{
+  margin-bottom: 20px;
+}

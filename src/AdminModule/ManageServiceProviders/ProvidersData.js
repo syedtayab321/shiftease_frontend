@@ -1,0 +1,177 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Spinner, Modal, Button } from 'react-bootstrap';
+
+export default function ProviderDataTable() {
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false); // New state for action loading
+    const [error, setError] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [selectedEmail, setSelectedEmail] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Fetch data from the server
+    const fetchItems = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/adminapis/userdata/');
+            if (Array.isArray(response.data)) {
+                setItems(response.data);
+            } else {
+                setItems([]); // Fallback to an empty array if the response is not as expected
+            }
+            setLoading(false);
+        } catch (err) {
+            setError('Error fetching data');
+            setLoading(false);
+        }
+    };
+
+    // Call fetchItems when the component mounts
+    useEffect(() => {
+        fetchItems();
+    }, []);
+
+    // Handle modal display
+    const handleshowModal = (email) => {
+        setSelectedEmail(email);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    // Handle approve/reject action
+    const handleActionClick = async (status) => {
+        setShowModal(false);
+        setActionLoading(true);
+
+        try {
+            await axios.post('http://127.0.0.1:8000/adminapis/accountApproval/', {
+                request_status: status,
+                email: selectedEmail,
+            });
+            setActionLoading(false);
+            window.location.reload();
+        } catch (e) {
+            console.log('Error during action:', e);
+            setActionLoading(false); // Set action loading to false in case of error
+        }
+    };
+
+    const filteredItems = items.filter(user =>
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (loading) {
+        return (
+            <div className="text-center my-5">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    return (
+        <>
+            {/* Modal for Account Approval */}
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Account Approvals</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Do you want to approve or reject the request for {selectedEmail}?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal} disabled={actionLoading}>
+                        Cancel
+                    </Button>
+                    <Button variant="success" onClick={() => handleActionClick('Approved')} disabled={actionLoading}>
+                        {actionLoading ? <Spinner animation="border" size="sm" /> : 'Approve'}
+                    </Button>
+                    <Button variant="danger" onClick={() => handleActionClick('Rejected')} disabled={actionLoading}>
+                        {actionLoading ? <Spinner animation="border" size="sm" /> : 'Reject'}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Main User Management Table */}
+            <div className="container mt-5">
+                <h2 className="mb-4 text-center">Company Management</h2>
+
+                {/* Search Bar */}
+                <div className="mb-4 d-flex justify-content-between align-items-center">
+                    <input
+                        type="text"
+                        placeholder="Search by email or company name"
+                        className="form-control w-50"
+                        onChange={e => setSearchTerm(e.target.value)}
+                    />
+                    <button className="btn btn-primary">Add Company</button>
+                </div>
+
+                <div className="table-responsive">
+                    <table className="table table-striped table-hover">
+                        <thead className="table-dark">
+                            <tr>
+                                <th>Email</th>
+                                <th>Company Name</th>
+                                <th>Address</th>
+                                <th>Password</th>
+                                <th>Zip Code</th>
+                                <th>Services</th>
+                                <th>Request Status</th>
+                                <th>Action</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredItems.map((user, index) => (
+                                <tr key={index}>
+                                    <td>{user.email}</td>
+                                    <td>{user.company_name}</td>
+                                    <td>{user.location}</td>
+                                    <td>{user.password}</td>
+                                    <td>{user.zipcode}</td>
+                                    <td>{user.service}</td>
+                                    <td>
+                                        {user.request_status === 'pending' && (
+                                            <span className='badge bg-warning text-dark'>{user.request_status}</span>
+                                        )}
+                                        {user.request_status === 'Rejected' && (
+                                            <span className='badge bg-danger'>{user.request_status}</span>
+                                        )}
+                                        {user.request_status === 'Approved' && (
+                                            <span className='badge bg-success'>{user.request_status}</span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <button className="btn btn-success btn-sm me-2"
+                                                onClick={() => handleshowModal(user.email)}
+                                                disabled={actionLoading}>
+                                            Approve/Reject
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button className="btn btn-warning btn-sm me-2">Edit</button>
+                                    </td>
+                                    <td>
+                                        <button className="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </>
+    );
+}

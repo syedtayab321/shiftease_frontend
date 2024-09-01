@@ -1,0 +1,81 @@
+.team-table-container {
+  width: 100%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.team-table-container .team-table-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.team-table-container .search-and-add-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.team-table-container .search-bar {
+  width: 70%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.team-table-container .add-button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.team-table-container .team-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: scroll;
+}
+
+.team-table-container .team-table th, .team-table td {
+  text-align: left;
+  padding: 12px 15px;
+  font-size: 13px;
+}
+
+.team-table-container .team-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.team-table-container .team-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.team-table-container .team-table tr:hover {
+  background-color: #e6e6e6;
+}
+
+.team-table-container .btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.team-table-container .btn-warning {
+  background-color: #ffc107;
+  color: white;
+}
+
+.team-table-container .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.team-table-container .text-center {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+}

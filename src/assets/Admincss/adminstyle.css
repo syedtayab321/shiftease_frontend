@@ -1,0 +1,125 @@
+.admin-dashboard {
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #010447;
+}
+.admin-content{
+  width: 79%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 16px;
+  padding: 10px;
+  overflow-y: scroll;
+}
+ .sidebar {
+    height: 100vh;
+    background-color: #011343;
+    color: #ffffff;
+    padding-top: 20px;
+     width: 250px;
+     margin: 0;
+     position: sticky;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-header h4 {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    align-items:start;
+    width: 100%;
+}
+.sidebar-links ul {
+    width: 100%;
+}
+.sidebar-links .nav-item{
+    width: 100%;
+}
+.sidelinks{
+    font-size: 15px;
+    margin: 8px 0;
+    padding: 10px;
+    border-bottom: 1px solid green;
+    text-align: left;
+    border-radius: 3px;
+    width: 100%;
+    transition: background-color 0.3s;
+    color:white;
+}
+
+.sidelinks:hover {
+    background-color: #ffffff;
+    color: #010447;
+}
+.hamburgericon{
+    width: 56px;
+    height: 40px;
+    background-color: #010447;
+    border-radius: 4px;
+    position: absolute;
+    right: 10px;
+    top: 24px;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px;
+    z-index: 1;
+}
+.hamburgericon .line{
+    width: 80%;
+    height: 4px;
+    background-color: white;
+    border-radius: 20px;
+}
+@media (max-width: 767px) {
+    .containers-fluid{
+        padding: 10px;
+    }
+    .sidebar{
+        display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    transition: transform 1.3s ease;
+    transform: translateX(-100%);
+        z-index: 1;
+    }
+    .hamburgericon{
+        display: flex;
+    }
+    .show{
+        display: block; /* Make it visible */
+     transform: translateX(0);
+    }
+
+}
+.logout {
+    width: 100%;
+    text-align: center;
+    height: 20px;
+}
+
+.logout .btn {
+    width: 97%;
+    border-radius: 4px;
+}
