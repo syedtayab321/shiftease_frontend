@@ -18,7 +18,7 @@ export default function ProviderDataTable() {
             if (Array.isArray(response.data)) {
                 setItems(response.data);
             } else {
-                setItems([]); // Fallback to an empty array if the response is not as expected
+                setItems([]);
             }
             setLoading(false);
         } catch (err) {
@@ -27,12 +27,10 @@ export default function ProviderDataTable() {
         }
     };
 
-    // Call fetchItems when the component mounts
     useEffect(() => {
         fetchItems();
     }, []);
 
-    // Handle modal display
     const handleshowModal = (email) => {
         setSelectedEmail(email);
         setShowModal(true);
@@ -42,7 +40,6 @@ export default function ProviderDataTable() {
         setShowModal(false);
     };
 
-    // Handle approve/reject action
     const handleActionClick = async (status) => {
         setShowModal(false);
         setActionLoading(true);
@@ -59,7 +56,12 @@ export default function ProviderDataTable() {
             setActionLoading(false); // Set action loading to false in case of error
         }
     };
-
+    const DeleteData=async (CompanyId)=>{
+               const response = await axios.delete(`http://127.0.0.1:8000/adminapis/userdata/?id=${CompanyId}`);
+               if (response){
+                   alert(response.data)
+               }
+    }
     const filteredItems = items.filter(user =>
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.company_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -120,22 +122,24 @@ export default function ProviderDataTable() {
                 <div className="table-responsive">
                     <table className="table table-striped table-hover">
                         <thead className="table-dark">
-                            <tr>
-                                <th>Email</th>
-                                <th>Company Name</th>
-                                <th>Address</th>
-                                <th>Password</th>
-                                <th>Zip Code</th>
-                                <th>Services</th>
-                                <th>Request Status</th>
-                                <th>Action</th>
-                                <th>Update</th>
-                                <th>Delete</th>
-                            </tr>
+                        <tr>
+                            <th>Company Id</th>
+                            <th>Email</th>
+                            <th>Company Name</th>
+                            <th>Address</th>
+                            <th>Password</th>
+                            <th>Zip Code</th>
+                            <th>Services</th>
+                            <th>Request Status</th>
+                            <th>Action</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
                         </thead>
                         <tbody>
                             {filteredItems.map((user, index) => (
                                 <tr key={index}>
+                                    <td>{user.id}</td>
                                     <td>{user.email}</td>
                                     <td>{user.company_name}</td>
                                     <td>{user.location}</td>
@@ -161,10 +165,13 @@ export default function ProviderDataTable() {
                                         </button>
                                     </td>
                                     <td>
-                                        <button className="btn btn-warning btn-sm me-2">Edit</button>
+                                        <button className="btn btn-warning btn-sm me-2">Edit
+                                        </button>
                                     </td>
                                     <td>
-                                        <button className="btn btn-danger btn-sm">Delete</button>
+                                        <button className="btn btn-danger btn-sm"
+                                         onClick={() => DeleteData(user.id)}
+                                        >Delete</button>
                                     </td>
                                 </tr>
                             ))}

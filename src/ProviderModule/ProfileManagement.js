@@ -14,7 +14,6 @@ const UserProfile = () => {
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Fetch email from local storage
   const emailFromLocalStorage = localStorage.getItem('UserEmail');
 
   useEffect(() => {
@@ -38,7 +37,6 @@ const UserProfile = () => {
     }
   }, [emailFromLocalStorage]);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -47,12 +45,10 @@ const UserProfile = () => {
     setShowUpdateButton(true);
   };
 
-  // Handle edit button click
   const handleEditClick = () => {
     setIsEditable(true);
   };
 
-  // Handle update button click
   const handleUpdateClick = async () => {
     if (emailFromLocalStorage) {
       try {
@@ -66,89 +62,80 @@ const UserProfile = () => {
     }
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
     <div className="user-profile-container">
-      <h2 className="profile-title">User Profile</h2>
-      <p className="profile-email">Email: {formData.email}</p> {/* Display email */}
+      <div className="profile-card">
+        <h2 className="profile-title">User Profile</h2>
+        <p className="profile-email">Email: {formData.email}</p>
 
-      <div className="profile-grid">
-        <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            readOnly
-            hidden
-        />
+        <div className="profile-grid">
+          <input type="email" name="email" value={formData.email} readOnly hidden />
 
-        <label>Company Name</label>
-        <input
+          <label>Company Name</label>
+          <input
             type="text"
             name="companyName"
             value={formData.companyName}
             onChange={handleInputChange}
             readOnly={!isEditable}
-        />
+          />
 
-        <label>Password</label>
-        <div className="password-container">
-          <input
+          <label>Password</label>
+          <div className="password-container">
+            <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               readOnly={!isEditable}
-          />
-          <i
+            />
+            <i
               className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
               onClick={togglePasswordVisibility}
-              style={{cursor: "pointer"}}
-          ></i>
-        </div>
+            ></i>
+          </div>
 
-        <label>Services</label>
-        <select
+          <label>Services</label>
+          <select
             name="services"
             value={formData.services}
             onChange={handleInputChange}
             disabled={!isEditable}
-        >
-          <option value="Shifting">Shifting</option>
-          <option value="Renting">Renting</option>
-          <option value="Decorating">Decorating</option>
-          <option value="Shifting and Decorating">Shifting and Decorating</option>
-          <option value="Shifting and Renting">Shifting and Renting</option>
-          <option value="Renting and Decorating">Renting and Decorating</option>
-        </select>
+          >
+            <option value="Shifting">Shifting</option>
+            <option value="Renting">Renting</option>
+            <option value="Decorating">Decorating</option>
+            <option value="Shifting and Decorating">Shifting and Decorating</option>
+            <option value="Shifting and Renting">Shifting and Renting</option>
+            <option value="Renting and Decorating">Renting and Decorating</option>
+          </select>
 
-        <label>Location</label>
-        <input
+          <label>Location</label>
+          <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleInputChange}
             readOnly={!isEditable}
-        />
-      </div>
+          />
+        </div>
 
-      {/* Edit and Update Buttons */}
-      <div className="profile-buttons">
-        {!isEditable && (
+        <div className="profile-buttons">
+          {!isEditable && (
             <button onClick={handleEditClick} className="btn btn-primary">
-            Edit
-          </button>
-        )}
-
-        {showUpdateButton && (
-          <button onClick={handleUpdateClick} className="btn btn-success">
-            Update
-          </button>
-        )}
+              Edit
+            </button>
+          )}
+          {showUpdateButton && (
+            <button onClick={handleUpdateClick} className="btn btn-success">
+              Update
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

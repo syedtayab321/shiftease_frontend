@@ -64,12 +64,19 @@ useEffect(() => {
     else
     {
       try {
-      await axios.post("http://localhost:8000/providerapis/teamdata/", values);
-      handleClose();
-      onTeamAdded();
+     var response = await axios.post("http://localhost:8000/providerapis/teamdata/", values);
+      if(response.status===400){
+        alert('data already found for thos user')
+      }
+      else if(response.status===201){
+        handleClose();
+        onTeamAdded();
+        alert('Data added Sucessfully')
+      }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert(error.message);
+      if(error.response && error.response.status ===400){
+          alert('data already found for this user')
+      }
     }
     }
   };
