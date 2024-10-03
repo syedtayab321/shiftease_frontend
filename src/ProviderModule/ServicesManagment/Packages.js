@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './../../assets/Providercss/packages.css';
 import axios from "axios";
 import AddPackage from "./AddPackage";
-import { Button, FormControl, Table } from 'react-bootstrap';
+import { Button, FormControl, Card, Row, Col } from 'react-bootstrap';
 
 const Packages = () => {
   const [packagesData, setPackagesData] = useState([]);
@@ -74,7 +74,7 @@ const Packages = () => {
     <div className="container">
       <h2 className="header">Your Packages</h2>
 
-      <div className="controls">
+      <div className="controls mb-4">
         <Button className="addButton" onClick={AddModal}>Add New Package</Button>
         <FormControl
           type="text"
@@ -87,40 +87,47 @@ const Packages = () => {
 
       <AddPackage show={showModal} handleClose={handleClose} onPackageAdded={handlePackageAdded} packageid={packageId} />
 
-      <Table striped bordered hover className="mt-4">
-        <thead>
-        <tr>
-          <th>#</th>
-          <th>Package Name</th>
-          <th>Service</th>
-          <th>Price</th>
-          <th>Actions</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-          {filteredPackages.length > 0 ? (
-            filteredPackages.map((pkg, index) => (
-              <tr key={pkg.id}>
-                <td>{index + 1}</td>
-                <td>{pkg.package_name}</td>
-                <td>{pkg.package_service}</td>
-                <td>${pkg.package_price}</td>
-                <td>
-                  <Button variant="primary" className="actionButton" onClick={() => UpdateModal(pkg.id)}>Update</Button>
-                </td>
-                <td>
-                   <Button variant="danger" className="deleteButton" onClick={() => DeletePackage(pkg.id)}>Delete</Button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center">No packages found</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+      <Row>
+        {filteredPackages.length > 0 ? (
+          filteredPackages.map((pkg, index) => (
+            <Col key={pkg.id} md={4} sm={6} className="mb-4">
+              <Card>
+                <Card.Img
+                    variant="top"
+                    src={`http://localhost:8000${pkg.package_image}`}
+                    alt={pkg.package_name}
+                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                  />
+                <Card.Body>
+                  <Card.Title>{pkg.package_name}</Card.Title>
+                  <Card.Text>
+                    <strong>Service:</strong> {pkg.package_service} <br />
+                    <strong>Price:</strong> ${pkg.package_price}
+                  </Card.Text>
+                  <Button
+                    variant="primary"
+                    className="actionButton me-2"
+                    onClick={() => UpdateModal(pkg.id)}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="deleteButton"
+                    onClick={() => DeletePackage(pkg.id)}
+                  >
+                    Delete
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          <Col>
+            <p className="text-center">No packages found</p>
+          </Col>
+        )}
+      </Row>
     </div>
   );
 };

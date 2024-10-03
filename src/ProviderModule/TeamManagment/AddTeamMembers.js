@@ -40,46 +40,43 @@ useEffect(() => {
   fetchTeamData();
 }, [teamMemberId]);
 
-  const initialValues = {
-    team_member_name: teamMemberId?teamdata.team_member_name:"",
-    team_member_email:teamMemberId?teamdata.team_member_email: "",
-    team_member_role:teamMemberId?teamdata.team_member_role: "",
-    team_member_phone:teamMemberId?teamdata.team_member_phone: "",
-    team_member_cnic:teamMemberId?teamdata.team_member_cnic: "",
-    team_name:teamMemberId?teamdata.team_name: "",
-    company_email: companyEmail,
-  };
+const initialValues = {
+  team_member_name: teamMemberId && teamdata.team_member_name ? teamdata.team_member_name : "",
+  team_member_email: teamMemberId && teamdata.team_member_email ? teamdata.team_member_email : "",
+  team_member_role: teamMemberId && teamdata.team_member_role ? teamdata.team_member_role : "",
+  team_member_phone: teamMemberId && teamdata.team_member_phone ? teamdata.team_member_phone : "",
+  team_member_cnic: teamMemberId && teamdata.team_member_cnic ? teamdata.team_member_cnic : "",
+  team_name: teamMemberId && teamdata.team_name ? teamdata.team_name : "",
+  company_email: companyEmail,
+};
 
-  const handleSubmit = async (values) => {
-    if(teamMemberId){
-      try {
-      await axios.put(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`, values);
-      handleClose();
-      onTeamAdded();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert(error.message);
+
+const handleSubmit = async (values) => {
+  console.log("Submitting values: ", values);
+  try {
+    if (teamMemberId) {
+      const response = await axios.put(
+        `http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`,
+        values
+      );
+      console.log("Update response: ", response);
+    } else {
+      const response = await axios.post("http://localhost:8000/providerapis/teamdata/", values);
+      console.log("Post response: ", response);
     }
+    handleClose();
+    onTeamAdded();
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    if (error.response) {
+      console.error("Error response:", error.response.data);
+      alert(error.response.data.message || "An error occurred");
+    } else {
+      alert("An error occurred");
     }
-    else
-    {
-      try {
-     var response = await axios.post("http://localhost:8000/providerapis/teamdata/", values);
-      if(response.status===400){
-        alert('data already found for thos user')
-      }
-      else if(response.status===201){
-        handleClose();
-        onTeamAdded();
-        alert('Data added Sucessfully')
-      }
-    } catch (error) {
-      if(error.response && error.response.status ===400){
-          alert('data already found for this user')
-      }
-    }
-    }
-  };
+  }
+};
+
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -111,26 +108,7 @@ useEffect(() => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col md={6}>
-                  <Form.Group controlId="formCompanyEmail">
-                    <Form.Label>Company Email</Form.Label>
-                    <Field
-                      name="company_email"
-                      as={Form.Control}
-                      type="email"
-                      value={companyEmail} // Display the company email fetched from state
-                      isInvalid={touched.company_email && !!errors.company_email}
-                      readOnly
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.company_email}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col md={6}>
+                  <Col md={6}>
                   <Form.Group controlId="formName">
                     <Form.Label>Name</Form.Label>
                     <Field
@@ -142,21 +120,6 @@ useEffect(() => {
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.team_member_name}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group controlId="formEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Field
-                      name="team_member_email"
-                      as={Form.Control}
-                      type="email"
-                      placeholder="Enter team member's email"
-                      isInvalid={touched.team_member_email && !!errors.team_member_email}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.team_member_email}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>

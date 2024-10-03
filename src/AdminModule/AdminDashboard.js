@@ -4,6 +4,7 @@ import Sidebar from "./Components/Sidebar";
 import ProviderDataTable from "./ManageServiceProviders/ProvidersData";
 import {useNavigate} from "react-router-dom";
 import UserTable from "./ManageUsers/UserTable";
+import AdRequestsPage from "./ManageAdsRequests/AdRequests";
 export default function AdminDashboard(props){
   const [selectedSection, setSelectedSection] = useState('manage_providers');
   var adminemail = localStorage.getItem('adminEmail');
@@ -25,6 +26,7 @@ export default function AdminDashboard(props){
                 <div className="admin-content">
                     {selectedSection === "manage_providers" && <ProviderDataTable/>}
                     {selectedSection === 'manage_users' && <UserTable/>}
+                    {selectedSection === 'manage_ad_requests' && <AdRequestsPage/>}
                 </div>
             </div>
         </>

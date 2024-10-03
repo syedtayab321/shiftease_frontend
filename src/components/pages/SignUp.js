@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { Spinner } from 'react-bootstrap';
-import logo from './../../assets/images/logo_back.png'
+import logo from './../../assets/images/logo_back.png';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const SignUp = () => {
     <div className='main-signup-section'>
       <div className="signup-container">
         <div className='Image-section'>
-           <img src={logo}/>
+           <img src={logo} alt="Logo" />
         </div>
         <div className="signup-section">
           <h2>Create an account</h2>
@@ -29,7 +29,8 @@ const SignUp = () => {
               phone: "",
               zipcode: "",
               password: "",
-              confirmPassword: ""
+              confirmPassword: "",
+              image: null,
             }}
             validationSchema={Yup.object({
               email: Yup.string().email("Invalid email address").required("Required"),
@@ -43,20 +44,28 @@ const SignUp = () => {
                 .required("Required"),
               confirmPassword: Yup.string()
                 .oneOf([Yup.ref('password'), null], "Passwords must match")
-                .required("Required")
+                .required("Required"),
+              image: Yup.mixed().required("Required") // Validation for image
             })}
             onSubmit={async (values, { resetForm, setErrors }) => {
               setIsSubmitting(true);
+
+              const formData = new FormData();
+              formData.append('email', values.email);
+              formData.append('company_name', values.company);
+              formData.append('location', values.location);
+              formData.append('service', values.services);
+              formData.append('mobile_no', values.countryCode + values.phone);
+              formData.append('zipcode', values.zipcode);
+              formData.append('password', values.password);
+              formData.append('request_status', 'pending');
+              formData.append('profile_image', values.image); // Append image file
+
               try {
-                const response = await axios.post('http://127.0.0.1:8000/providerapis/signup/', {
-                  email: values.email,
-                  company_name: values.company,
-                  location: values.location,
-                  service: values.services,
-                  mobile_no: values.countryCode + values.phone,
-                  zipcode: values.zipcode,
-                  password: values.password,
-                  request_status: 'pending',
+                const response = await axios.post('http://127.0.0.1:8000/providerapis/signup/', formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  }
                 });
                 setIsSubmitting(false);
                 navigate('/confirmation');
@@ -70,48 +79,60 @@ const SignUp = () => {
               }
             }}
           >
-            {({ errors }) => (
-              <Form>
+            {({ setFieldValue, errors }) => (
+
+                 <Form>
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <Field
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="hello@company.com"
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="hello@company.com"
                     />
                     {errors.email && <div className="error text text-danger">{errors.email}</div>}
                   </div>
                   <div className="form-group">
+                    <label htmlFor="image">Company Logo</label>
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        onChange={(event) => {
+                          setFieldValue("image", event.currentTarget.files[0]);
+                        }}
+                    />
+                    <ErrorMessage name="image" component="div" className="error text text-danger"/>
+                  </div>
+                  <div className="form-group">
                     <label htmlFor="company">Company Name</label>
                     <Field
-                      type="text"
-                      id="company"
-                      name="company"
-                      placeholder="Your Company"
+                        type="text"
+                        id="company"
+                        name="company"
+                        placeholder="Your Company"
                     />
-                    <ErrorMessage name="company" component="div" className="error text text-danger" />
+                    <ErrorMessage name="company" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="location">Location</label>
                     <Field
-                      type="text"
-                      id="location"
-                      name="location"
-                      placeholder="City, Country"
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="City, Country"
                     />
-                    <ErrorMessage name="location" component="div" className="error text text-danger" />
+                    <ErrorMessage name="location" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="services">Select Services</label>
                     <Field as="select" id="services" name="services">
                       <option value="">Select Options</option>
                       <option value="All">All</option>
-                      <option value="renting">Renting</option>
                       <option value="decorating">Decorating</option>
                       <option value="shifting">Shifting</option>
                     </Field>
-                    <ErrorMessage name="services" component="div" className="error text text-danger" />
+                    <ErrorMessage name="services" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="phone">Mobile Number</label>
@@ -122,55 +143,55 @@ const SignUp = () => {
                         <option value="+91">+91</option>
                       </Field>
                       <Field
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        placeholder="1234567890"
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          placeholder="1234567890"
                       />
                     </div>
-                    <ErrorMessage name="phone" component="div" className="error text text-danger" />
+                    <ErrorMessage name="phone" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="zipcode">Zip Code</label>
                     <Field
-                      type="number"
-                      id="zipcode"
-                      name="zipcode"
-                      placeholder="12340"
+                        type="number"
+                        id="zipcode"
+                        name="zipcode"
+                        placeholder="12340"
                     />
-                    <ErrorMessage name="zipcode" component="div" className="error text text-danger" />
+                    <ErrorMessage name="zipcode" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
                     <Field
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder="********"
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="********"
                     />
-                    <ErrorMessage name="password" component="div" className="error text text-danger" />
+                    <ErrorMessage name="password" component="div" className="error text text-danger"/>
                   </div>
                   <div className="form-group">
                     <label htmlFor="confirmPassword">Confirm Password</label>
                     <Field
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      placeholder="********"
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="********"
                     />
-                    <ErrorMessage name="confirmPassword" component="div" className="error text text-danger" />
+                    <ErrorMessage name="confirmPassword" component="div" className="error text text-danger"/>
                   </div>
 
-                <button type="submit" className="sign-up-btn" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <Spinner animation="border" size="sm" /> Processing...
-                    </>
-                  ) : (
-                    'Sign Up'
-                  )}
-                </button>
-              </Form>
+                  <button type="submit" className="sign-up-btn" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                        <>
+                          <Spinner animation="border" size="sm"/> Processing...
+                        </>
+                    ) : (
+                        'Sign Up'
+                    )}
+                  </button>
+                </Form>
             )}
           </Formik>
           <div className="links">

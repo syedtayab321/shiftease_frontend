@@ -16,6 +16,7 @@ const validationSchema = Yup.object({
 const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
   const [companyEmail, setCompanyEmail] = useState("");
   const [packageData, setPackageData] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null); // To store selected image file
 
   useEffect(() => {
     const email = localStorage.getItem("UserEmail");
@@ -40,28 +41,35 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
 
   const initialValues = {
     package_name: packageid ? packageData.package_name : "",
-    package_service:packageid ? packageData.package_service : "",
-    package_price:packageid ? packageData.package_price : "",
-    company_email:companyEmail,
+    package_service: packageid ? packageData.package_service : "",
+    package_price: packageid ? packageData.package_price : "",
+    company_email: companyEmail,
   };
 
   const handleSubmit = async (values) => {
-    const data = {
-      package_name: values.package_name,
-      package_service: values.package_service,
-      package_price: values.package_price,
-      company_email: companyEmail,
-    };
+    const formData = new FormData(); // Create FormData for file and text data
+    formData.append("package_name", values.package_name);
+    formData.append("package_service", values.package_service);
+    formData.append("package_price", values.package_price);
+    formData.append("company_email", companyEmail);
+    if (selectedImage) {
+      formData.append("package_image", selectedImage); // Append selected image file
+    }
 
     try {
       if (packageid) {
         await axios.put(
           `http://localhost:8000/providerapis/packagesdata/?id=${packageid}`,
-          data
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
-        await axios.post("http://localhost:8000/providerapis/packagesdata/", data);
-        alert('data saved')
+        await axios.post(
+          "http://localhost:8000/providerapis/packagesdata/",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        alert("Data saved");
       }
       handleClose();
       onPackageAdded();
@@ -69,6 +77,11 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
       console.error("Error submitting form:", error);
       alert("An error occurred: " + (error.response?.data?.error || error.message));
     }
+  };
+
+  // Function to handle file selection
+  const handleFileChange = (event) => {
+    setSelectedImage(event.currentTarget.files[0]);
   };
 
   return (
@@ -84,7 +97,7 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, setFieldValue }) => (
           <FormikForm className="add-package-form">
             <Modal.Body className="add-package-body">
               {/* Package Name Field */}
@@ -115,7 +128,9 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
                   <option value="">Select service type</option>
                   <option value="Shifting">Shifting</option>
                   <option value="Decorating">Decorating</option>
-                  <option value="Shifting and Decorating">Shifting and Decorating</option>
+                  <option value="Shifting and Decorating">
+                    Shifting and Decorating
+                  </option>
                 </Field>
                 <Form.Control.Feedback type="invalid" className="feedback-custom">
                   {errors.package_service}
@@ -138,16 +153,14 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              {/* Read-only Company Email Field */}
-              <Form.Group controlId="formCompanyEmail" className="form-group-custom">
-                <Form.Label className="form-label-custom">Company Email</Form.Label>
-                <Field
-                  name="company_email"
-                  as={Form.Control}
-                  type="email"
-                  value={companyEmail}
-                  readOnly
+              {/* Package Image Field */}
+              <Form.Group controlId="formPackageImage" className="form-group-custom">
+                <Form.Label className="form-label-custom">Package Image</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
                   className="form-control-custom"
+                  onChange={handleFileChange} // Capture file change manually
                 />
               </Form.Group>
             </Modal.Body>

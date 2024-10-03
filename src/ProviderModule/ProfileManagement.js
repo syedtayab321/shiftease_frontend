@@ -9,7 +9,8 @@ const UserProfile = () => {
     email: "",
     password: "",
     services: "",
-    location: ""
+    location: "",
+    profileImage: ""
   });
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +28,8 @@ const UserProfile = () => {
             email: response.data.email,
             password: response.data.password,
             services: response.data.service,
-            location: response.data.location
+            location: response.data.location,
+            profileImage: response.data.profile_image || "",
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -67,71 +69,79 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="user-profile-container">
-      <div className="profile-card">
-        <h2 className="profile-title">User Profile</h2>
-        <p className="profile-email">Email: {formData.email}</p>
+    <div className="user-profile-container-custom">
+      <div className="profile-card-custom">
+        <div className="profile-avatar-custom">
+          <img
+            src={`http://127.0.0.1:8000${formData.profileImage}`}
+            alt="Profile Avatar"
+            className="avatar-image-custom"
+          />
+        </div>
+        <h2 className="profile-title-custom">User Profile</h2>
+        <p className="profile-email-custom">Email: {formData.email}</p>
 
-        <div className="profile-grid">
+        <div className="profile-grid-custom">
           <input type="email" name="email" value={formData.email} readOnly hidden />
 
-          <label>Company Name</label>
+          <label className="profile-label-custom">Company Name</label>
           <input
             type="text"
             name="companyName"
             value={formData.companyName}
             onChange={handleInputChange}
             readOnly={!isEditable}
+            className="profile-input-custom"
           />
 
-          <label>Password</label>
-          <div className="password-container">
+          <label className="profile-label-custom">Password</label>
+          <div className="password-container-custom">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleInputChange}
               readOnly={!isEditable}
+              className="profile-input-custom"
             />
             <i
-              className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+              className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"} password-toggle-custom`}
               onClick={togglePasswordVisibility}
             ></i>
           </div>
 
-          <label>Services</label>
+          <label className="profile-label-custom">Services</label>
           <select
             name="services"
             value={formData.services}
             onChange={handleInputChange}
             disabled={!isEditable}
+            className="profile-select-custom"
           >
             <option value="Shifting">Shifting</option>
-            <option value="Renting">Renting</option>
             <option value="Decorating">Decorating</option>
-            <option value="Shifting and Decorating">Shifting and Decorating</option>
-            <option value="Shifting and Renting">Shifting and Renting</option>
-            <option value="Renting and Decorating">Renting and Decorating</option>
+            <option value="All">Shifting and Decorating</option>
           </select>
 
-          <label>Location</label>
+          <label className="profile-label-custom">Location</label>
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleInputChange}
             readOnly={!isEditable}
+            className="profile-input-custom"
           />
         </div>
 
-        <div className="profile-buttons">
+        <div className="profile-buttons-custom">
           {!isEditable && (
-            <button onClick={handleEditClick} className="btn btn-primary">
+            <button onClick={handleEditClick} className="btn-custom btn-primary-custom">
               Edit
             </button>
           )}
           {showUpdateButton && (
-            <button onClick={handleUpdateClick} className="btn btn-success">
+            <button onClick={handleUpdateClick} className="btn-custom btn-success-custom">
               Update
             </button>
           )}

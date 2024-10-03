@@ -53,7 +53,7 @@ export default function Sidebar({onselect}) {
                             </button>
                         </li>
                         <li className="nav-item">
-                            <button className="nav-link sidelinks" onClick={() => onselect('manage_users')}>View Ads Requests
+                            <button className="nav-link sidelinks" onClick={() => onselect('manage_ad_requests')}>View Ads Requests
                             </button>
                         </li>
                         <li className="nav-item">

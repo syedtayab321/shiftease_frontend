@@ -116,7 +116,6 @@ export default function ProviderDataTable() {
                         className="form-control w-50"
                         onChange={e => setSearchTerm(e.target.value)}
                     />
-                    <button className="btn btn-primary">Add Company</button>
                 </div>
 
                 <div className="table-responsive">
