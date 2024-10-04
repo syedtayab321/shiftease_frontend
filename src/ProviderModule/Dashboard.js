@@ -5,11 +5,11 @@ import TopBar from "./DashboardComponents/TopBar";
 import OrdersTable from "./OrdersManagement/OrderTable";
 import TeamDataTable from "./TeamManagment/TeamDataTable";
 import UserProfile from "./ProfileManagement";
-import Notifications from "./Notifications/Notifications";
 import Packages from "./ServicesManagment/Packages";
 import Requests from "./RequestsManagement/Requests";
 import ReviewsPage from "./Reviews/Reviews";
 import OrderMainPage from "./OrdersManagement/OrderMainPage";
+import MessagesPage from "./ManageMessages/Messages";
 export default function Dashboard(){
   const [selectedSection, setSelectedSection] = useState('home');
 
@@ -28,7 +28,7 @@ export default function Dashboard(){
             {selectedSection === "home" && <OrdersTable/>}
             {selectedSection === "team" && <TeamDataTable/>}
             {selectedSection === "profile" && <UserProfile/>}
-            {selectedSection === "notifications" && <Notifications/>}
+            {selectedSection === "messages" && <MessagesPage/>}
             {selectedSection === "packages" && <Packages/>}
             {selectedSection === "requests" && <Requests/>}
             {selectedSection === "reviews" && <ReviewsPage/>}

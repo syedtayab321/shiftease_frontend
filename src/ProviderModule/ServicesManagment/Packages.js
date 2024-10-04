@@ -44,7 +44,7 @@ const Packages = () => {
   const filteredPackages = Array.isArray(packagesData)
     ? packagesData.filter((pkg) =>
         pkg.package_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pkg.package_id.toString().includes(searchTerm) ||
+        pkg.id.toString().includes(searchTerm) ||
         pkg.package_service.toLowerCase().includes(searchTerm.toLowerCase()) ||
         pkg.package_price.toString().includes(searchTerm)
       )

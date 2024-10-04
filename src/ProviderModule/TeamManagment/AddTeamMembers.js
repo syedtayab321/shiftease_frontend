@@ -8,7 +8,7 @@ const validationSchema = Yup.object({
   team_member_name: Yup.string().required("Name is required"),
   team_member_email: Yup.string().email("Invalid email address").required("Email is required"),
   team_member_role: Yup.string().required("Role is required"),
-  team_member_phone: Yup.string().required("Phone number is required"),
+  team_member_phone: Yup.string().required("Phone number is required").matches(/^[0-9]{11}$/, "number must be exactly 11 digits"),
   team_member_cnic: Yup.string()
     .required("CNIC is required")
     .matches(/^[0-9]{13}$/, "CNIC must be exactly 13 digits"),
@@ -16,72 +16,77 @@ const validationSchema = Yup.object({
   company_email: Yup.string().email("Invalid email address").required("Company email is required"),
 });
 
-const AddTeamMemberModal = ({ show, handleClose, onTeamAdded,teamMemberId }) => {
+const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) => {
   const [companyEmail, setCompanyEmail] = useState("");
-  const [teamdata,setTeamData]=useState([]);
+  const [teamData, setTeamData] = useState([]);
 
   useEffect(() => {
     const email = localStorage.getItem("UserEmail");
     setCompanyEmail(email || "");
   }, []);
 
-useEffect(() => {
-  const fetchTeamData = async () => {
-    if (teamMemberId) {
-      try {
-        const response = await axios.get(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`);
-        setTeamData(response.data);
-      } catch (error) {
-        console.error("Error fetching team data:", error);
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      if (teamMemberId) {
+        try {
+          const response = await axios.get(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`);
+          setTeamData(response.data);
+        } catch (error) {
+          console.error("Error fetching team data:", error);
+        }
+      }
+    };
+
+    fetchTeamData();
+  }, [teamMemberId]);
+
+  const initialValues = {
+    team_member_name: teamMemberId  ? teamData.team_member_name : "",
+    team_member_email: teamMemberId ? teamData.team_member_email : "",
+    team_member_role: teamMemberId ? teamData.team_member_role : "",
+    team_member_phone: teamMemberId ? teamData.team_member_phone : "",
+    team_member_cnic: teamMemberId  ? teamData.team_member_cnic : "",
+    team_name: teamMemberId ? teamData.team_name : "",
+    company_email: companyEmail,
+  };
+
+  const handleSubmit = async (values) => {
+
+    const formData = new FormData();
+    formData.append("eam_member_name", values.team_member_name);
+    formData.append("team_member_email", values.team_member_email);
+    formData.append("team_member_role", values.team_member_role);
+    formData.append("team_member_phone", values.team_member_phone);
+    formData.append("team_member_cnic", values.team_member_cnic);
+    formData.append("team_name", values.team_name);
+    formData.append("company_email", companyEmail)
+
+    try {
+      if (teamMemberId) {
+        // Update existing team member
+        const response = await axios.put(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`, formData);
+        console.log("Update response:", response);
+      } else {
+        // Add new team member
+        const response = await axios.post("http://localhost:8000/providerapis/teamdata/", formData);
+        console.log("Post response:", response);
+      }
+      onTeamAdded();
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      if (error.response) {
+        alert(error.response.data.message || "An error occurred");
+      } else {
+        alert("An error occurred");
       }
     }
   };
 
-  fetchTeamData();
-}, [teamMemberId]);
-
-const initialValues = {
-  team_member_name: teamMemberId && teamdata.team_member_name ? teamdata.team_member_name : "",
-  team_member_email: teamMemberId && teamdata.team_member_email ? teamdata.team_member_email : "",
-  team_member_role: teamMemberId && teamdata.team_member_role ? teamdata.team_member_role : "",
-  team_member_phone: teamMemberId && teamdata.team_member_phone ? teamdata.team_member_phone : "",
-  team_member_cnic: teamMemberId && teamdata.team_member_cnic ? teamdata.team_member_cnic : "",
-  team_name: teamMemberId && teamdata.team_name ? teamdata.team_name : "",
-  company_email: companyEmail,
-};
-
-
-const handleSubmit = async (values) => {
-  console.log("Submitting values: ", values);
-  try {
-    if (teamMemberId) {
-      const response = await axios.put(
-        `http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`,
-        values
-      );
-      console.log("Update response: ", response);
-    } else {
-      const response = await axios.post("http://localhost:8000/providerapis/teamdata/", values);
-      console.log("Post response: ", response);
-    }
-    handleClose();
-    onTeamAdded();
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    if (error.response) {
-      console.error("Error response:", error.response.data);
-      alert(error.response.data.message || "An error occurred");
-    } else {
-      alert("An error occurred");
-    }
-  }
-};
-
-
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Add Team Member</Modal.Title>
+        <Modal.Title>{teamMemberId ? "Edit Team Member" : "Add Team Member"}</Modal.Title>
       </Modal.Header>
       <Formik
         enableReinitialize
@@ -108,7 +113,7 @@ const handleSubmit = async (values) => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                  <Col md={6}>
+                <Col md={6}>
                   <Form.Group controlId="formName">
                     <Form.Label>Name</Form.Label>
                     <Field
@@ -185,7 +190,7 @@ const handleSubmit = async (values) => {
                 Close
               </Button>
               <Button type="submit" variant="primary">
-                Add Team Member
+                {teamMemberId ? "Update" : "Add"} Team Member
               </Button>
             </Modal.Footer>
           </FormikForm>

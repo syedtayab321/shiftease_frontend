@@ -17,7 +17,7 @@ const navitems = [
   { text: 'Service Management', icon: <FaUserAlt />, link: "packages" },
   { text: 'View Requests', icon: <FaUsers />, link: "requests" },
   { text: 'Orders Management', icon: <FaProjectDiagram />, link: "orders" },
-  { text: 'Notifications', icon: <FaStar />, link: "notifications" },
+  { text: 'Messages', icon: <FaStar />, link: "messages" },
   { text: 'Profile', icon: <FaBars />, link: "profile" },
   { text: 'Reviews', icon: <FaBoxOpen />, link: "reviews" },
 ];
