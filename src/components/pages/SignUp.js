@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Spinner } from 'react-bootstrap';
 import logo from './../../assets/images/logo_back.png';
+import apiUrls from "../../ApiUrls";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const SignUp = () => {
               formData.append('profile_image', values.image); // Append image file
 
               try {
-                const response = await axios.post('http://127.0.0.1:8000/providerapis/signup/', formData, {
+                const response = await axios.post(`${apiUrls.PROVIDER_CREATE_ACCOUNT}`, formData, {
                   headers: {
                     'Content-Type': 'multipart/form-data',
                   }

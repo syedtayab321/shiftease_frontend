@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Card, Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import apiUrls from '../../ApiUrls';
 
 const AdRequestsPage = () => {
   const [ads, setAds] = useState([]);
@@ -11,8 +12,8 @@ const AdRequestsPage = () => {
     // Fetch data from the Django API
     const fetchAds = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/adminapis/HouseSellingAd/');
-        setAds(response.data); // assuming response.data is the list of ads
+        const response = await axios.get(apiUrls.HOUSE_SELLING_AD);
+        setAds(response.data);
         setLoading(false);
       } catch (err) {
         setError('Error fetching data from API');
@@ -57,7 +58,7 @@ const AdRequestsPage = () => {
             <Card className="shadow-sm h-100">
               <Card.Img
                 variant="top"
-                src={`http://127.0.0.1:8000/${ad.houseImage}`} // Assuming media URL
+                src={`${apiUrls.MAIN_URL}${ad.houseImage}`}
                 alt="House"
                 style={{ height: '200px', objectFit: 'cover' }}
               />

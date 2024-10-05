@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import apiUrls from "./../ApiUrls";
 const UserProfile = () => {
   const [userData, setUserData] = useState({});
   const [isEditable, setIsEditable] = useState(false);
@@ -15,13 +15,13 @@ const UserProfile = () => {
   const [showUpdateButton, setShowUpdateButton] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const emailFromLocalStorage = localStorage.getItem('UserEmail');
+  const IdFromLocalStorage = localStorage.getItem('UserID');
 
   useEffect(() => {
-    if (emailFromLocalStorage) {
+    if (IdFromLocalStorage) {
       const fetchUserData = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/providerapis/profiledata/?email=${emailFromLocalStorage}`);
+          const response = await axios.get(`${apiUrls.PROVIDER_OWN_DATA_GET}${IdFromLocalStorage}`);
           setUserData(response.data);
           setFormData({
             companyName: response.data.company_name,
@@ -37,7 +37,7 @@ const UserProfile = () => {
       };
       fetchUserData();
     }
-  }, [emailFromLocalStorage]);
+  }, [IdFromLocalStorage]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -52,9 +52,9 @@ const UserProfile = () => {
   };
 
   const handleUpdateClick = async () => {
-    if (emailFromLocalStorage) {
+    if (IdFromLocalStorage) {
       try {
-        const response = await axios.put(`http://localhost:8000/providerapis/profiledata/?email=${emailFromLocalStorage}`, formData);
+        const response = await axios.put(`${apiUrls.PROVIDER_OWN_DATA_GET}${IdFromLocalStorage}`, formData);
         setUserData(response.data);
         setIsEditable(false);
         setShowUpdateButton(false);
@@ -73,7 +73,7 @@ const UserProfile = () => {
       <div className="profile-card-custom">
         <div className="profile-avatar-custom">
           <img
-            src={`http://127.0.0.1:8000${formData.profileImage}`}
+            src={`${apiUrls.MAIN_URL}${formData.profileImage}`}
             alt="Profile Avatar"
             className="avatar-image-custom"
           />

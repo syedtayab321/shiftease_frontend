@@ -4,12 +4,13 @@ import {Link,useNavigate} from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from "axios";
+import apiUrls from "../../ApiUrls";
 export  default function ProviderLogin(){
   const navigate=useNavigate()
 
      useEffect(() => {
-    const storedEmail = localStorage.getItem("UserEmail");
-    if (storedEmail) {
+    const storedid = localStorage.getItem("UserID");
+    if (storedid) {
       navigate('/dashboard');
     }
   }, [navigate]);
@@ -36,16 +37,16 @@ export  default function ProviderLogin(){
                             })}
                             onSubmit={async(values,{setErrors}) => {
                                 try{
-                                    const response=await axios.post('http://127.0.0.1:8000/providerapis/login/', values);
+                                    const response=await axios.post(`${apiUrls.PROVIDER_LOGIN}`, values);
                                 if (response.status === 200) {
-                                const { email, requeststatus } = response.data;
+                                const { id, requeststatus } = response.data;
                                   if(requeststatus === 'pending'){
                                       navigate('/confirmation')
                                    }else if(requeststatus==='Rejected'){
                                       navigate('/rejection')
                                   }else if(requeststatus==='Approved'){
                                       navigate('/dashboard')
-                                      localStorage.setItem('UserEmail',email)
+                                      localStorage.setItem('UserID',id)
                                   }
                             }
                                 }catch (error) {

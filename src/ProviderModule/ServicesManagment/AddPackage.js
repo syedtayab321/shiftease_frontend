@@ -4,23 +4,25 @@ import { Formik, Field, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import "./../../assets/Providercss/packages.css";
+import apiUrls from "../../ApiUrls";
 
 const validationSchema = Yup.object({
   package_name: Yup.string().required("Package name is required"),
   package_service: Yup.string().required("Service type is required"),
+  package_description:Yup.string().required('service description is required'),
   package_price: Yup.number()
     .required("Price is required")
     .positive("Price must be a positive number"),
 });
 
 const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
-  const [companyEmail, setCompanyEmail] = useState("");
+  const [companyID, setCompanyID] = useState("");
   const [packageData, setPackageData] = useState({});
-  const [selectedImage, setSelectedImage] = useState(null); // To store selected image file
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
-    const email = localStorage.getItem("UserEmail");
-    setCompanyEmail(email || "");
+    const ID = localStorage.getItem("UserID");
+    setCompanyID(ID || "");
   }, []);
 
   useEffect(() => {
@@ -28,11 +30,11 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
       if (packageid) {
         try {
           const response = await axios.get(
-            `http://localhost:8000/providerapis/packagesdata/?id=${packageid}`
+            `${apiUrls.PROVIDER_PACKAGE_UPDATE}${packageid}`
           );
           setPackageData(response.data);
         } catch (error) {
-          console.error("Error fetching package data:", error);
+          alert("Error fetching package data:", error);
         }
       }
     };
@@ -43,29 +45,31 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
     package_name: packageid ? packageData.package_name : "",
     package_service: packageid ? packageData.package_service : "",
     package_price: packageid ? packageData.package_price : "",
-    company_email: companyEmail,
+    package_description: packageid ? packageData.package_description : "",
+    company_id: companyID,
   };
 
   const handleSubmit = async (values) => {
-    const formData = new FormData(); // Create FormData for file and text data
+    const formData = new FormData();
     formData.append("package_name", values.package_name);
     formData.append("package_service", values.package_service);
     formData.append("package_price", values.package_price);
-    formData.append("company_email", companyEmail);
+    formData.append("package_description", values.package_description);
+    formData.append("company_id", companyID);
     if (selectedImage) {
-      formData.append("package_image", selectedImage); // Append selected image file
+      formData.append("package_image", selectedImage);
     }
 
     try {
       if (packageid) {
         await axios.put(
-          `http://localhost:8000/providerapis/packagesdata/?id=${packageid}`,
-          formData,
+          `${apiUrls.PROVIDER_PACKAGE_UPDATE}${packageid}`,
+           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
         await axios.post(
-          "http://localhost:8000/providerapis/packagesdata/",
+          `${apiUrls.PROVIDER_PACKAGE_POST}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -139,7 +143,7 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
 
               {/* Package Price Field */}
               <Form.Group controlId="formPackagePrice" className="form-group-custom">
-                <Form.Label className="form-label-custom">Package Price</Form.Label>
+                <Form.Label className="form-label-custom">Package Price(PKR)</Form.Label>
                 <Field
                   name="package_price"
                   as={Form.Control}
@@ -160,8 +164,22 @@ const AddPackage = ({ show, handleClose, onPackageAdded, packageid }) => {
                   type="file"
                   accept="image/*"
                   className="form-control-custom"
-                  onChange={handleFileChange} // Capture file change manually
+                  onChange={handleFileChange}
                 />
+              </Form.Group>
+              <Form.Group controlId="formPackageDescription" className="form-group-custom">
+                <Form.Label className="form-label-custom">Package Description</Form.Label>
+                <Field name="package_description" 
+                  as={Form.Control}
+                  type="text"
+                  maxLength={1000}
+                  placeholder="Enter package description about 1000 words"
+                  className="form-control-custom"
+                  isInvalid={touched.package_description && !!errors.package_description}
+                />
+                <Form.Control.Feedback type="invalid" className="feedback-custom">
+                  {errors.package_description}
+                </Form.Control.Feedback>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer className="add-package-footer">

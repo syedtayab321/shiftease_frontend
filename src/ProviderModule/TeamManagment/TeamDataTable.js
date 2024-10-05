@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./../../assets/Providercss/teamtable.css";
 import AddTeamMemberModal from "./AddTeamMembers";
+import apiUrls from "../../ApiUrls";
 
 const TeamTable = () => {
   const [showModal, setShowModal] = useState(false);
@@ -10,10 +11,10 @@ const TeamTable = () => {
   const [memberid,setMemberId]=useState('');
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-  const CompanyEmail = localStorage.getItem("UserEmail");
+  const Companyid = localStorage.getItem("UserID");
   const fetchTeamData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/providerapis/teamdata/?email=${CompanyEmail}`);
+      const response = await axios.get(`${apiUrls.PROVIDER_TEAM_DATA_GET}${Companyid}`);
       if (Array.isArray(response.data)) {
         setTeamMembers(response.data);
       } else {
@@ -27,10 +28,10 @@ const TeamTable = () => {
   };
 
   useEffect(() => {
-    if (CompanyEmail) {
+    if (Companyid) {
       fetchTeamData();
     }
-  }, [CompanyEmail]);
+  }, [Companyid]);
 
  const handleadding=()=>{
     fetchTeamData();
@@ -54,7 +55,7 @@ const filteredTeamMembers = teamMembers.filter((member) => {
 
   const DeleteTeamMember = async (id) => {
      try {
-      const response = await axios.delete(`http://localhost:8000/providerapis/teamdata/?id=${id}`);
+      const response = await axios.delete(`${apiUrls.PROVIDER_TEAM_DATA_DELETE}${id}`);
       fetchTeamData();
     } catch (error) {
       console.error("Error fetching packages data:", error);
@@ -62,8 +63,8 @@ const filteredTeamMembers = teamMembers.filter((member) => {
     }
   };
 
-  const UpdateModal=(id)=>{
-      setMemberId(id);
+  const UpdateModal=(team_id)=>{
+      setMemberId(team_id);
       handleShow();
   }
     const AddModal=()=>{

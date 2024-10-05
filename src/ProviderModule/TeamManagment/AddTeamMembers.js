@@ -3,6 +3,7 @@ import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { Formik, Field, Form as FormikForm } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import apiUrls from "../../ApiUrls";
 
 const validationSchema = Yup.object({
   team_member_name: Yup.string().required("Name is required"),
@@ -29,7 +30,7 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
     const fetchTeamData = async () => {
       if (teamMemberId) {
         try {
-          const response = await axios.get(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`);
+          const response = await axios.get(`http://localhost:8000${teamMemberId}`);
           setTeamData(response.data);
         } catch (error) {
           console.error("Error fetching team data:", error);
@@ -50,7 +51,7 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
     company_email: companyEmail,
   };
 
-  const handleSubmit = async (values) => {
+  const handleDataSubmit = async (values) => {
 
     const formData = new FormData();
     formData.append("eam_member_name", values.team_member_name);
@@ -63,12 +64,10 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
 
     try {
       if (teamMemberId) {
-        // Update existing team member
-        const response = await axios.put(`http://localhost:8000/providerapis/teamdata/?id=${teamMemberId}`, formData);
+        const response = await axios.put(`${apiUrls.PROVIDER_TEAM_DATA_UPDATE}${teamMemberId}`, formData);
         console.log("Update response:", response);
       } else {
-        // Add new team member
-        const response = await axios.post("http://localhost:8000/providerapis/teamdata/", formData);
+        const response = await axios.post(`${apiUrls.PROVIDER_TEAM_DATA_POST}`, formData);
         console.log("Post response:", response);
       }
       onTeamAdded();
@@ -92,7 +91,7 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
         enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={handleDataSubmit}
       >
         {({ errors, touched }) => (
           <FormikForm>

@@ -3,6 +3,7 @@ import './../../assets/Providercss/packages.css';
 import axios from "axios";
 import AddPackage from "./AddPackage";
 import { Button, FormControl, Card, Row, Col } from 'react-bootstrap';
+import apiUrls from '../../ApiUrls';
 
 const Packages = () => {
   const [packagesData, setPackagesData] = useState([]);
@@ -12,12 +13,13 @@ const Packages = () => {
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
-  const CompanyEmail = localStorage.getItem("UserEmail");
+  const CompanyID = localStorage.getItem("UserID");
   const [packageId, setPackageId] = useState('');
 
   const fetchPackagesData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/providerapis/packagesdata/?email=${CompanyEmail}`);
+      const response = await axios.get(`${apiUrls.PROVIDER_PACKAGE_DATA_GET}${CompanyID}`);
+      
       if (Array.isArray(response.data)) {
         setPackagesData(response.data);
       } else {
@@ -26,15 +28,14 @@ const Packages = () => {
       }
     } catch (error) {
       console.error("Error fetching packages data:", error);
-      alert("An error occurred while fetching package data.");
     }
   };
 
   useEffect(() => {
-    if (CompanyEmail) {
+    if (CompanyID) {
       fetchPackagesData();
     }
-  }, [CompanyEmail]);
+  }, [CompanyID]);
 
   const handlePackageAdded = () => {
     fetchPackagesData();
@@ -50,9 +51,9 @@ const Packages = () => {
       )
     : [];
 
-  const DeletePackage = async (id) => {
+  const DeletePackage = async (package_id) => {
     try {
-      await axios.delete(`http://localhost:8000/providerapis/packagesdata/?id=${id}`);
+      await axios.delete(`${apiUrls.PROVIDER_PACKAGE_DELETE}${package_id}`);
       fetchPackagesData();
     } catch (error) {
       console.error("Error deleting package:", error);
@@ -60,8 +61,8 @@ const Packages = () => {
     }
   };
 
-  const UpdateModal = (id) => {
-    setPackageId(id);
+  const UpdateModal = (package_id) => {
+    setPackageId(package_id);
     handleShow();
   };
 
@@ -94,7 +95,7 @@ const Packages = () => {
               <Card>
                 <Card.Img
                     variant="top"
-                    src={`http://localhost:8000${pkg.package_image}`}
+                    src={`${apiUrls.MAIN_URL}${pkg.package_image}`}
                     alt={pkg.package_name}
                     style={{ width: "100%", height: "200px", objectFit: "cover" }}
                   />

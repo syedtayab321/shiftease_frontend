@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Spinner, Modal, Button } from 'react-bootstrap';
+import apiUrls from '../../ApiUrls';
 
 export default function ProviderDataTable() {
     const [items, setItems] = useState([]);
@@ -8,13 +9,14 @@ export default function ProviderDataTable() {
     const [actionLoading, setActionLoading] = useState(false); // New state for action loading
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [selectedID, setSelectedID] = useState('');
     const [selectedEmail, setSelectedEmail] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
     // Fetch data from the server
     const fetchItems = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/adminapis/userdata/');
+            const response = await axios.get(apiUrls.PROVIDER_ACCOUNT_GET);
             if (Array.isArray(response.data)) {
                 setItems(response.data);
             } else {
@@ -31,7 +33,8 @@ export default function ProviderDataTable() {
         fetchItems();
     }, []);
 
-    const handleshowModal = (email) => {
+    const handleshowModal = (id,email) => {
+        setSelectedID(id);
         setSelectedEmail(email);
         setShowModal(true);
     };
@@ -45,19 +48,20 @@ export default function ProviderDataTable() {
         setActionLoading(true);
 
         try {
-            await axios.post('http://127.0.0.1:8000/adminapis/accountApproval/', {
+            await axios.post(apiUrls.PROVIDER_ACCOUNT_APPROVAL, {
                 request_status: status,
-                email: selectedEmail,
+                id: selectedID,
+                email:selectedEmail,
             });
             setActionLoading(false);
             window.location.reload();
         } catch (e) {
             console.log('Error during action:', e);
-            setActionLoading(false); // Set action loading to false in case of error
+            setActionLoading(false);
         }
     };
     const DeleteData=async (CompanyId)=>{
-               const response = await axios.delete(`http://127.0.0.1:8000/adminapis/userdata/?id=${CompanyId}`);
+               const response = await axios.delete(`${apiUrls.PROVIDER_DELETE_ACCOUNT}${CompanyId}`);
                if (response){
                    alert(response.data)
                }
@@ -131,7 +135,6 @@ export default function ProviderDataTable() {
                             <th>Services</th>
                             <th>Request Status</th>
                             <th>Action</th>
-                            <th>Update</th>
                             <th>Delete</th>
                         </tr>
                         </thead>
@@ -158,13 +161,9 @@ export default function ProviderDataTable() {
                                     </td>
                                     <td>
                                         <button className="btn btn-success btn-sm me-2"
-                                                onClick={() => handleshowModal(user.email)}
+                                                onClick={() => handleshowModal(user.id,user.email)}
                                                 disabled={actionLoading}>
                                             Approve/Reject
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-warning btn-sm me-2">Edit
                                         </button>
                                     </td>
                                     <td>

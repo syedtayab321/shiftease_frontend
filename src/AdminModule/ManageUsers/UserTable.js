@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Spinner} from "react-bootstrap";
+import apiUrls from "../../ApiUrls";
 
 export default function UserTable(){
     const [items,setItems]=useState([])
@@ -11,7 +12,7 @@ export default function UserTable(){
     const [error, setError] = useState('');
     const fetchItems = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/adminapis/UserSignUp/');
+            const response = await axios.get(apiUrls.BUYER_GET_DATA);
             if (Array.isArray(response.data)) {
                 setItems(response.data);
             } else {
