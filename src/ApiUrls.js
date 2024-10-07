@@ -30,6 +30,9 @@ const apiUrls = {
   PROVIDER_TEAM_DATA_POST:`${BASE_URL}/providerapis/teamdata/`,
   PROVIDER_TEAM_DATA_GET:`${BASE_URL}/providerapis/teamdata/?company_id=`,
   PROVIDER_TEAM_DATA_DELETE:`${BASE_URL}/providerapis/teamdata/?id=`,
+
+  // order requests data
+  PROVIDER_ORDER_REQUESTS_GET:`${BASE_URL}/providerapis/serviceBookingRequests/`,
 };
 
 export default apiUrls;

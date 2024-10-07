@@ -6,7 +6,7 @@
 }
 
 .client-requests-header {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
@@ -16,7 +16,6 @@
 .client-requests-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
   background-color: white;
   border-radius: 12px;
   overflow: hidden;
@@ -25,21 +24,21 @@
 .client-requests-table th,
 .client-requests-table td {
   border: 1px solid #ddd;
-  padding: 2px 8px;
   text-align: center;
   color: #555;
   font-size: 14px;
 }
 
 .client-requests-table th {
-  background-color: #3c91e6;
+  background-color: #1c2125;
   color: white;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .client-requests-table tr {
   transition: background-color 0.3s ease;
+  
 }
 
 .client-requests-table tr:hover {
@@ -52,7 +51,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   color: white;
   margin: 0 5px;
   transition: background-color 0.3s ease;

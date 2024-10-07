@@ -31,6 +31,8 @@ const UserProfile = () => {
             location: response.data.location,
             profileImage: response.data.profile_image || "",
           });
+          localStorage.setItem('CompanyProfile',response.data.profile_image)
+          localStorage.setItem('CompanyName',response.data.company_name)
         } catch (error) {
           console.error("Error fetching user data:", error);
         }

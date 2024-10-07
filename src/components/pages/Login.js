@@ -39,23 +39,25 @@ export  default function ProviderLogin(){
                                 try{
                                     const response=await axios.post(`${apiUrls.PROVIDER_LOGIN}`, values);
                                 if (response.status === 200) {
-                                const { id, requeststatus } = response.data;
-                                  if(requeststatus === 'pending'){
+                                const { id, request_status,profile_image,company_name } = response.data;
+                                  if(request_status === 'pending'){
                                       navigate('/confirmation')
-                                   }else if(requeststatus==='Rejected'){
+                                   }else if(request_status==='Rejected'){
                                       navigate('/rejection')
-                                  }else if(requeststatus==='Approved'){
+                                  }else if(request_status==='Approved'){
                                       navigate('/dashboard')
                                       localStorage.setItem('UserID',id)
+                                      localStorage.setItem('CompanyName',company_name)
+                                      localStorage.setItem('CompanyProfile',profile_image)
                                   }
                             }
                                 }catch (error) {
-                if (error.response && error.response.status === 400) {
-                  setErrors({ password: error.response.data.error });
-                } else {
-                  console.error('Error during login:', error);
-                }
-              }
+                                    if (error.response && error.response.status === 400) {
+                                    setErrors({ password: error.response.data.error });
+                                    } else {
+                                    console.error('Error during login:', error);
+                                    }
+                                }
                             }}
                         >
                             {({errors})=>(

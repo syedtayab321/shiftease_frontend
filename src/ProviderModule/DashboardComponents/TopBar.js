@@ -3,6 +3,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 import "./../../assets/Providercss/topbar.css";
 import profilePic from "./../../assets/images/logo.png";
 import {useNavigate} from "react-router-dom";
+import apiUrls from "../../ApiUrls";
 const TopBar = () => {
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
@@ -43,11 +44,11 @@ const TopBar = () => {
           {/* main bar*/}
           <div className="custom-topbar">
               <div className="custom-topbar-title">
-                  <h1>Provider Dashboard</h1>
+                  <h1>{localStorage.getItem('CompanyName')} Dashboard</h1>
               </div>
               <div className="custom-topbar-user">
-                  <img src={profilePic} alt="Profile" className="custom-profile-pic"/>
-                  <span className="custom-username">{localStorage.getItem('UserEmail')}</span>
+                  <img src ={`${apiUrls.MAIN_URL}${localStorage.getItem("CompanyProfile")}`} alt="Profile" className="custom-profile-pic"/>
+                  <span className="custom-username">{localStorage.getItem('CompanyName')}</span>
                   <button className="custom-logout-btn" onClick={handleshowModal}>
                       <FaSignOutAlt className="custom-logout-icon"/>
                       Logout
