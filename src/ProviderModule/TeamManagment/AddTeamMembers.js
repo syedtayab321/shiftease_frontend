@@ -14,24 +14,24 @@ const validationSchema = Yup.object({
     .required("CNIC is required")
     .matches(/^[0-9]{13}$/, "CNIC must be exactly 13 digits"),
   team_name: Yup.string().required("Team name is required"),
-  company_email: Yup.string().email("Invalid email address").required("Company email is required"),
 });
 
 const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) => {
-  const [companyEmail, setCompanyEmail] = useState("");
+  const [companyID, setCompanyID] = useState("");
   const [teamData, setTeamData] = useState([]);
 
   useEffect(() => {
-    const email = localStorage.getItem("UserEmail");
-    setCompanyEmail(email || "");
+    const CompanyId = localStorage.getItem("UserID");
+    setCompanyID(CompanyId|| "");
   }, []);
 
   useEffect(() => {
     const fetchTeamData = async () => {
       if (teamMemberId) {
         try {
-          const response = await axios.get(`http://localhost:8000${teamMemberId}`);
+          const response = await axios.get(`${apiUrls.PROVIDER_TEAM_DATA_UPDATE}${teamMemberId}`);
           setTeamData(response.data);
+          console.log(response.data);
         } catch (error) {
           console.error("Error fetching team data:", error);
         }
@@ -48,19 +48,18 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
     team_member_phone: teamMemberId ? teamData.team_member_phone : "",
     team_member_cnic: teamMemberId  ? teamData.team_member_cnic : "",
     team_name: teamMemberId ? teamData.team_name : "",
-    company_email: companyEmail,
+    company_ID: companyID,
   };
-
   const handleDataSubmit = async (values) => {
 
     const formData = new FormData();
-    formData.append("eam_member_name", values.team_member_name);
+    formData.append("team_member_name", values.team_member_name);
     formData.append("team_member_email", values.team_member_email);
     formData.append("team_member_role", values.team_member_role);
     formData.append("team_member_phone", values.team_member_phone);
     formData.append("team_member_cnic", values.team_member_cnic);
     formData.append("team_name", values.team_name);
-    formData.append("company_email", companyEmail)
+    formData.append("company_id", companyID)
 
     try {
       if (teamMemberId) {
@@ -77,11 +76,10 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
       if (error.response) {
         alert(error.response.data.message || "An error occurred");
       } else {
-        alert("An error occurred");
+        alert("email or cnic already exits");
       }
     }
   };
-
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -99,16 +97,16 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
               <Row>
                 <Col md={6}>
                   <Form.Group controlId="formTeamName">
-                    <Form.Label>Team Name</Form.Label>
+                    <Form.Label>Team Member Email</Form.Label>
                     <Field
-                      name="team_name"
+                      name="team_member_email"
                       as={Form.Control}
                       type="text"
-                      placeholder="Enter team name"
-                      isInvalid={touched.team_name && !!errors.team_name}
+                      placeholder="Enter team member email"
+                      isInvalid={touched.team_member_email && !!errors.team_member_email}
                     />
                     <Form.Control.Feedback type="invalid">
-                      {errors.team_name}
+                      {errors.team_member_email}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
@@ -130,6 +128,21 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
               </Row>
 
               <Row>
+                 <Col md={6}>
+                  <Form.Group controlId="formTeamName">
+                    <Form.Label>Team Name</Form.Label>
+                    <Field
+                      name="team_name"
+                      as={Form.Control}
+                      type="text"
+                      placeholder="Enter team name"
+                      isInvalid={touched.team_name && !!errors.team_name}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.team_name}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
                 <Col md={6}>
                   <Form.Group controlId="formRole">
                     <Form.Label>Role</Form.Label>
@@ -148,7 +161,10 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col md={6}>
+              </Row>
+
+              <Row>
+               <Col md={6}>
                   <Form.Group controlId="formPhone">
                     <Form.Label>Phone</Form.Label>
                     <Field
@@ -163,9 +179,6 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              </Row>
-
-              <Row>
                 <Col md={6}>
                   <Form.Group controlId="formCnic">
                     <Form.Label>CNIC</Form.Label>
@@ -188,8 +201,12 @@ const AddTeamMemberModal = ({ show, handleClose, onTeamAdded, teamMemberId }) =>
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-              <Button type="submit" variant="primary">
-                {teamMemberId ? "Update" : "Add"} Team Member
+              <Button
+                type="submit"
+                variant="primary"
+                className="submit-button-custom"
+              >
+                {teamMemberId ? "Update Package" : "Add Package"}
               </Button>
             </Modal.Footer>
           </FormikForm>

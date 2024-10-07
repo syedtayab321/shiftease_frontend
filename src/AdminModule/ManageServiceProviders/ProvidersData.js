@@ -109,7 +109,7 @@ export default function ProviderDataTable() {
             </Modal>
 
             {/* Main User Management Table */}
-            <div className="container mt-5">
+            <div className="container">
                 <h2 className="mb-4 text-center">Company Management</h2>
 
                 {/* Search Bar */}

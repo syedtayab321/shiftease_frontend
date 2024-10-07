@@ -23,7 +23,7 @@ const TeamTable = () => {
       }
     } catch (error) {
       console.error("Error fetching packages data:", error);
-      alert("An error occurred while fetching package data.");
+      alert("No team member data found");
     }
   };
 
@@ -41,11 +41,13 @@ const filteredTeamMembers = teamMembers.filter((member) => {
   const teamName = member.team_name ? member.team_name.toLowerCase() : "";
   const memberId = member.id ? String(member.id) : "";
   const memberName = member.team_member_name ? member.team_member_name.toLowerCase() : "";
+  const memberRole = member.team_member_role ? member.team_member_role.toLowerCase() : "";
   const memberEmail = member.team_member_email ? member.team_member_email.toLowerCase() : "";
   const memberPhone = member.team_member_phone ? String(member.team_member_phone) : "";
 
   return (
     teamName.includes(searchTermLower) ||
+    memberRole.includes(searchTermLower) ||
     memberId.includes(searchTermLower) ||
     memberName.includes(searchTermLower) ||
     memberEmail.includes(searchTermLower) ||
@@ -89,12 +91,14 @@ const filteredTeamMembers = teamMembers.filter((member) => {
             Add Team Member
           </button>
         </div>
-        <table className="team-table">
+         <div className='table-responsive'>
+          <table className="team-table ">
           <thead>
           <tr>
             <th>Member ID</th>
             <th>Team Name</th>
             <th>Member Name</th>
+            <th>Member Role</th>
             <th>Member Email</th>
             <th>Mobile Number</th>
             <th>Member Cnic</th>
@@ -108,6 +112,7 @@ const filteredTeamMembers = teamMembers.filter((member) => {
                   <td>{member.id}</td>
                   <td>{member.team_name}</td>
                   <td>{member.team_member_name}</td>
+                  <td>{member.team_member_role}</td>
                   <td>{member.team_member_email}</td>
                   <td>{member.team_member_phone}</td>
                   <td>{member.team_member_cnic}</td>
@@ -128,6 +133,7 @@ const filteredTeamMembers = teamMembers.filter((member) => {
             )}
           </tbody>
         </table>
+         </div>
       </div>
     </>
   );

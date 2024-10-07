@@ -87,7 +87,6 @@ const Packages = () => {
       </div>
 
       <AddPackage show={showModal} handleClose={handleClose} onPackageAdded={handlePackageAdded} packageid={packageId} />
-
       <Row>
         {filteredPackages.length > 0 ? (
           filteredPackages.map((pkg, index) => (

@@ -48,7 +48,7 @@ export default function UserTable(){
     );
     return(
         <>
-            <div className="container mt-5">
+            <div className="container">
                 <h2 className="mb-4 text-center">Users Management</h2>
 
                 {/* Search Bar */}

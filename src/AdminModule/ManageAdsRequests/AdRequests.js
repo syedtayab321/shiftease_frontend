@@ -9,10 +9,9 @@ const AdRequestsPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the Django API
     const fetchAds = async () => {
       try {
-        const response = await axios.get(apiUrls.HOUSE_SELLING_AD);
+        const response = await axios.get(apiUrls.HOUSE_SELLING_AD_GET);
         setAds(response.data);
         setLoading(false);
       } catch (err) {
@@ -26,7 +25,7 @@ const AdRequestsPage = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(`https://your-django-api-url/adminapis/HouseSellingAd/${id}/`, {
+      await axios.patch(`${apiUrls.HOUSE_SELLING_AD_UPDATE}${id}`, {
         RequestStatus: 'Approved',
       });
       setAds(ads.map(ad => ad.id === id ? { ...ad, RequestStatus: 'Approved' } : ad));
@@ -37,7 +36,7 @@ const AdRequestsPage = () => {
 
   const handleReject = async (id) => {
     try {
-      await axios.patch(`https://your-django-api-url/adminapis/HouseSellingAd/${id}/`, {
+      await axios.patch(`${apiUrls.HOUSE_SELLING_AD_UPDATE}${id}`, {
         RequestStatus: 'Rejected',
       });
       setAds(ads.map(ad => ad.id === id ? { ...ad, RequestStatus: 'Rejected' } : ad));
@@ -48,9 +47,8 @@ const AdRequestsPage = () => {
 
   if (loading) return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>;
   if (error) return <Alert variant="danger">{error}</Alert>;
-
   return (
-    <Container className="my-5">
+    <Container>
       <h1 className="mb-4 text-center">House Rental Ads - Admin Panel</h1>
       <Row>
         {ads.map((ad) => (
