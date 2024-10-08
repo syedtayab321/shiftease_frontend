@@ -1,51 +1,65 @@
 import React, { useState, useEffect } from "react";
-import "./../../assets/Providercss/requests.css";
 import axios from "axios";
 import apiUrls from "../../ApiUrls";
+import "./../../assets/Providercss/requests.css";
+import RequestApprovalModal from "./requestApprovalModal";
 
 const ClientRequests = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
+  const fetchRequests = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${apiUrls.PROVIDER_ORDER_REQUESTS_GET}`
+      );
+      setRequests(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch data");
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${apiUrls.PROVIDER_ORDER_REQUESTS_GET}`
-        );
-        setRequests(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to fetch data");
-        setLoading(false);
-      }
-    };
-
     fetchRequests();
   }, []);
 
-  const filteredRequests = requests.filter(
-    (request) =>
-      (request.client_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        "") &&
-      (request.package_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        "") &&
-      (request.package_id?.includes(searchTerm) || "") &&
-      (request.location?.toLowerCase().includes(searchTerm.toLowerCase()) || "")
-  );
+  const filteredRequests = requests.filter((request) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      request.client_name?.toLowerCase().includes(searchLower) ||
+      request.package_name?.toLowerCase().includes(searchLower) ||
+      request.package_id?.toLowerCase().includes(searchLower) ||
+      request.location?.toLowerCase().includes(searchLower)
+    );
+  });
 
-  const approveRequest = (id) => {
-    alert(`Request ${id} approved.`);
-    setRequests(requests.filter((request) => request.id !== id));
+  const handleApproveClick = (request) => {
+    setSelectedRequest(request);
+    setShowModal(true);
   };
 
-  const rejectRequest = (id) => {
-    alert(`Request ${id} rejected.`);
-    setRequests(requests.filter((request) => request.id !== id));
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedRequest(null);
+  };
+  
+  const handleDeleteRequest = async (id) =>{
+    if (window.confirm("Are you sure you want to delete this request?")) {
+      try{
+        await axios.delete(`${apiUrls.PROVIDER_ORDER_REQUEST_DELETE}${id}`)
+        fetchRequests();
+      }
+      catch (e){
+            alert(e.toLowerCase)
+      }
+    }
   };
 
   return (
@@ -79,7 +93,7 @@ const ClientRequests = () => {
                 <th>Date</th>
                 <th>Request Status</th>
                 <th>Actions</th>
-                <th>Actions</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -111,18 +125,18 @@ const ClientRequests = () => {
                     </td>
                     <td>
                       <button
-                        className="client-requests-approve-button"
-                        onClick={() => approveRequest(request.id)}
+                        className="btn btn-outline-success"
+                        onClick={() => handleApproveClick(request)}
                       >
                         Approve
                       </button>
                     </td>
                     <td>
                       <button
-                        className="client-requests-reject-button"
-                        onClick={() => rejectRequest(request.id)}
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDeleteRequest(request.id)}
                       >
-                        Reject
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -137,6 +151,15 @@ const ClientRequests = () => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Render the Approval Modal */}
+      {showModal && selectedRequest && (
+        <RequestApprovalModal
+          request={selectedRequest}
+          closeModal={closeModal}
+          fetchdata={fetchRequests}
+        />
       )}
     </div>
   );

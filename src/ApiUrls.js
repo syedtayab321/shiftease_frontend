@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.249.18:7699";
+const BASE_URL = "http://192.168.18.2:7666";
 
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
@@ -30,9 +30,12 @@ const apiUrls = {
   PROVIDER_TEAM_DATA_POST:`${BASE_URL}/providerapis/teamdata/`,
   PROVIDER_TEAM_DATA_GET:`${BASE_URL}/providerapis/teamdata/?company_id=`,
   PROVIDER_TEAM_DATA_DELETE:`${BASE_URL}/providerapis/teamdata/?id=`,
-
+  
   // order requests data
   PROVIDER_ORDER_REQUESTS_GET:`${BASE_URL}/providerapis/serviceBookingRequests/`,
+  PROVIDER_ORDER_REQUEST_DELETE:`${BASE_URL}/providerapis/serviceBookingRequests/?request_id=`,
+  PROVIDER_ORDER_REQUEST_APPROVAL:`${BASE_URL}/providerapis/ApprovedOrders/`,
+  PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`
 };
 
 export default apiUrls;

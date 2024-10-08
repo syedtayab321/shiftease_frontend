@@ -1,44 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./../../assets/Providercss/ordertable.css";
-
-const ordersData = [
-  {
-    orderId: "#001",
-    customerName: "John Doe",
-    service: "Home Shifting",
-    date: "2024-08-10",
-    status: "Completed",
-    amount: "$250"
-  },
-  {
-    orderId: "#002",
-    customerName: "Jane Smith",
-    service: "Home Decoration",
-    date: "2024-08-12",
-    status: "Processing",
-    amount: "$450"
-  },
-  {
-    orderId: "#003",
-    customerName: "Sam Wilson",
-    service: "Home Shifting",
-    date: "2024-08-15",
-    status: "Pending",
-    amount: "$300"
-  }
-];
+import apiUrls from "../../ApiUrls";
 
 const OrdersTable = () => {
+  const [ordersData, setOrdersData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filter orders based on search term
-  const filteredOrders = ordersData.filter(order =>
-    order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.orderId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.date.includes(searchTerm)
-  );
+  const company_id = localStorage.getItem("UserID");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          `${apiUrls.PROVIDER_APPROVED_ORDERS_GET}${company_id}`
+        );
+        setOrdersData(response.data);
+      } catch (err) {
+        setError("Failed to fetch orders. Please try again later.");
+        console.error("Error fetching order data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [company_id]);
+
+  const filteredOrders = ordersData.filter((orders) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      (orders.client_name?.toLowerCase().includes(searchLower)) ||
+      (orders.service_date?.includes(searchLower)) ||
+      (orders.package_id?.toString().includes(searchLower)) || // Ensure package_id is a string
+      (orders.id?.toString().includes(searchLower)) // Convert id to string
+    );
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="orders-table-container">
@@ -48,7 +55,7 @@ const OrdersTable = () => {
       <div className="search-bar-container">
         <input
           type="text"
-          placeholder="Search by Customer Name, Order ID, Service, Status or Date"
+          placeholder="Search by Customer Name, Order ID, package id or Date"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-bar"
@@ -69,22 +76,23 @@ const OrdersTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map((order, index) => (
-            <tr key={index}>
-              <td>{order.orderId}</td>
-              <td>{order.customerName}</td>
-              <td>{order.service}</td>
-              <td>{order.date}</td>
-              <td className={`status ${order.status.toLowerCase()}`}>
-                {order.status}
-              </td>
-              <td>{order.amount}</td>
-              <td><button className='btn btn-primary'>View</button></td>
-            </tr>
-          ))}
-          {filteredOrders.length === 0 && (
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order, index) => (
+              <tr key={index}>
+                <td>{order.id}</td> {/* Corrected field */}
+                <td>{order.client_name}</td> {/* Corrected field */}
+                <td>{order.package_id}</td>
+                <td>{order.service_date}</td>
+                <td className={`status ${order.order_status.toLowerCase()}`}>
+                  {order.order_status}
+                </td>
+                <td>{order.package_price}</td>
+                <td><button className='btn btn-primary'>View</button></td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <td colSpan="6" className="text-center">
+              <td colSpan="7" className="text-center">
                 No orders found
               </td>
             </tr>
