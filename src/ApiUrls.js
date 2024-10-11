@@ -1,5 +1,5 @@
-const BASE_URL = "http://192.168.18.2:7666";
-
+// const BASE_URL = "http://192.168.18.2:7666";
+const BASE_URL = "http://192.168.112.18:7666";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
   // provider realted data apis
