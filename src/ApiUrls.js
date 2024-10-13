@@ -1,5 +1,5 @@
-const BASE_URL = "http://192.168.18.2:7666";
-// const BASE_URL = "http://192.168.112.18:7666";
+// const BASE_URL = "http://192.168.18.2:7666";
+const BASE_URL = "http://192.168.112.18:7666";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
   // provider realted data apis
@@ -35,7 +35,10 @@ const apiUrls = {
   PROVIDER_ORDER_REQUESTS_GET:`${BASE_URL}/providerapis/serviceBookingRequests/`,
   PROVIDER_ORDER_REQUEST_DELETE:`${BASE_URL}/providerapis/serviceBookingRequests/?request_id=`,
   PROVIDER_ORDER_REQUEST_APPROVAL:`${BASE_URL}/providerapis/ApprovedOrders/`,
-  PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`
+
+  PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`,
+  PROVIDER_APPROVED_ORDERS_UPDATE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
+  PROVIDER_APPROVED_ORDERS_DELETE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`
 };
 
 export default apiUrls;

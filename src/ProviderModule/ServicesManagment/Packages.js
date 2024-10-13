@@ -4,7 +4,7 @@ import axios from "axios";
 import AddPackage from "./AddPackage";
 import { Button, FormControl, Card, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'; // Import icons
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'; 
 import apiUrls from '../../ApiUrls';
 
 const Packages = () => {

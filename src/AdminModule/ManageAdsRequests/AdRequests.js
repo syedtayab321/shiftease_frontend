@@ -100,8 +100,7 @@ const AdRequestsPage = () => {
             <th>Price</th>
             <th>Location</th>
             <th>Status</th>
-            <th>Approve</th>
-            <th>Reject</th>
+            <th>Action</th>
             <th>View Details</th>
           </tr>
         </thead>
@@ -126,8 +125,7 @@ const AdRequestsPage = () => {
                   onClick={() => handleApprove(ad.id, apiUrl)}
                   disabled={ad.RequestStatus === 'Approved'}
                 />
-              </td>
-              <td>
+    
                 <BsXCircle
                   size={24}
                   color={ad.RequestStatus === 'Rejected' ? 'gray' : 'red'}
