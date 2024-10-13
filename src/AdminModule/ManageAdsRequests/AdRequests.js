@@ -1,100 +1,209 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Card, Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Container, Table, Spinner, Alert, Badge, Form, Button, Row, Col } from 'react-bootstrap';
+import { BsCheckCircle, BsXCircle, BsEye } from 'react-icons/bs';
 import apiUrls from '../../ApiUrls';
 
+// Import separate modal components for each type of property
+import HouseModal from './HouseAdDetailsModal';
+import ApartmentModal from './ApartmentAdDetailsModal';
+import OfficeModal from './OfficeAdDetailsModal';
+
 const AdRequestsPage = () => {
-  const [ads, setAds] = useState([]);
+  const [houses, setHouses] = useState([]);
+  const [apartments, setApartments] = useState([]);
+  const [offices, setOffices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        const response = await axios.get(apiUrls.HOUSE_SELLING_AD_GET);
-        setAds(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError('Error fetching data from API');
-        setLoading(false);
-      }
-    };
+  const [selectedAd, setSelectedAd] = useState(null);
+  const [showHouseModal, setShowHouseModal] = useState(false);
+  const [showApartmentModal, setShowApartmentModal] = useState(false);
+  const [showOfficeModal, setShowOfficeModal] = useState(false);
 
-    fetchAds();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('house'); 
+
+  const fetchData = async () => {
+    try {
+      const houseResponse = await axios.get(apiUrls.HOUSE_SELLING_AD_GET);
+      const apartmentResponse = await axios.get(apiUrls.Apartment_SELLING_AD_GET);
+      const officeResponse = await axios.get(apiUrls.Office_SELLING_AD_GET);
+
+      setHouses(houseResponse.data);
+      setApartments(apartmentResponse.data);
+      setOffices(officeResponse.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Error fetching data from API');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  const handleApprove = async (id) => {
+  const handleApprove = async (id, apiUrl) => {
     try {
-      await axios.patch(`${apiUrls.HOUSE_SELLING_AD_UPDATE}${id}`, {
-        RequestStatus: 'Approved',
-      });
-      setAds(ads.map(ad => ad.id === id ? { ...ad, RequestStatus: 'Approved' } : ad));
+      await axios.put(`${apiUrl}${id}`, { RequestStatus: 'Approved' });
+      fetchData();
     } catch (error) {
       console.error('Error approving the ad', error);
     }
   };
 
-  const handleReject = async (id) => {
+  const handleReject = async (id, apiUrl) => {
     try {
-      await axios.patch(`${apiUrls.HOUSE_SELLING_AD_UPDATE}${id}`, {
-        RequestStatus: 'Rejected',
-      });
-      setAds(ads.map(ad => ad.id === id ? { ...ad, RequestStatus: 'Rejected' } : ad));
+      await axios.put(`${apiUrl}${id}`, { RequestStatus: 'Rejected' });
+      fetchData();
     } catch (error) {
       console.error('Error rejecting the ad', error);
     }
   };
 
-  if (loading) return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>;
+  const handleViewDetails = (ad, type) => {
+    setSelectedAd(ad);
+    if (type === 'house') {
+      setShowHouseModal(true);
+    } else if (type === 'apartment') {
+      setShowApartmentModal(true);
+    } else if (type === 'office') {
+      setShowOfficeModal(true);
+    }
+  };
+
+
+  const filterAds = (ads) => {
+    return ads.filter((ad) => 
+      ad.ownerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ad.address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const renderAdsTable = (ads, type, apiUrl) => (
+    <>
+      <h2 className="mt-4 mb-3 text-center text-secondary">{type} Ads</h2>
+      <Form className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Search by Owner or Location"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </Form>
+      <Table responsive bordered hover className="table-striped table-bordered shadow-sm text-center">
+        <thead className="bg-primary text-white">
+          <tr>
+            <th>ID</th>
+            <th>Owner Name</th>
+            <th>Price</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Approve</th>
+            <th>Reject</th>
+            <th>View Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filterAds(ads).map((ad) => (
+            <tr key={ad.id} className={`align-middle ${ad.RequestStatus === 'Approved' ? 'table-success' : ad.RequestStatus === 'Rejected' ? 'table-danger' : ''}`}>
+              <td>{ad.id}</td>
+              <td>{ad.ownerName}</td>
+              <td>{ad.price}</td>
+              <td>{ad.address}</td>
+              <td>
+                <Badge
+                  bg={ad.RequestStatus === 'Approved' ? 'success' : ad.RequestStatus === 'Rejected' ? 'danger' : 'secondary'}
+                >
+                  {ad.RequestStatus}
+                </Badge>
+              </td>
+              <td>
+                <BsCheckCircle
+                  size={24}
+                  color={ad.RequestStatus === 'Approved' ? 'gray' : 'green'}
+                  onClick={() => handleApprove(ad.id, apiUrl)}
+                  disabled={ad.RequestStatus === 'Approved'}
+                />
+              </td>
+              <td>
+                <BsXCircle
+                  size={24}
+                  color={ad.RequestStatus === 'Rejected' ? 'gray' : 'red'}
+                  onClick={() => handleReject(ad.id, apiUrl)}
+                  disabled={ad.RequestStatus === 'Rejected'}
+                />
+              </td>
+              <td>
+                <BsEye
+                  size={24}
+                  color="blue"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleViewDetails(ad, type)}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
+  );
+
+  if (loading) return <Spinner animation="border" role="status" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
+
   return (
-    <Container>
-      <h1 className="mb-4 text-center">House Rental Ads - Admin Panel</h1>
-      <Row>
-        {ads.map((ad) => (
-          <Col md={6} lg={4} key={ad.id} className="mb-4">
-            <Card className="shadow-sm h-100">
-              <Card.Img
-                variant="top"
-                src={`${apiUrls.MAIN_URL}${ad.houseImage}`}
-                alt="House"
-                style={{ height: '200px', objectFit: 'cover' }}
-              />
-              <Card.Body>
-                <Card.Title className="text-primary">{ad.ownerName}</Card.Title>
-                <Card.Text><strong>Country:</strong> {ad.country}</Card.Text>
-                <Card.Text><strong>City:</strong> {ad.city}</Card.Text>
-                <Card.Text><strong>Description:</strong> {ad.houseDescription}</Card.Text>
-                <Card.Text><strong>Owner Email:</strong> {ad.ownerEmail}</Card.Text>
-                <Card.Text><strong>Owner Number:</strong> {ad.ownerNumber}</Card.Text>
-                <Card.Text><strong>Status:</strong>
-                  <span className={`ms-2 badge ${ad.RequestStatus === 'Approved' ? 'bg-success' : ad.RequestStatus === 'Rejected' ? 'bg-danger' : 'bg-secondary'}`}>
-                    {ad.RequestStatus}
-                  </span>
-                </Card.Text>
-                <div className="d-flex justify-content-between mt-3">
-                  <Button
-                    variant="success"
-                    onClick={() => handleApprove(ad.id)}
-                    disabled={ad.RequestStatus === 'Approved'}
-                    className="w-45"
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleReject(ad.id)}
-                    disabled={ad.RequestStatus === 'Rejected'}
-                    className="w-45"
-                  >
-                    Reject
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
+    <Container className="py-4">
+      <h1 className="mb-4 text-center text-primary">Ad Requests - Admin Panel</h1>
+
+      {/* Buttons to toggle between ads */}
+      <Row className="mb-4">
+        <Col className="text-center">
+          <Button variant="outline-primary" onClick={() => {
+             setSelectedCategory('house')
+             fetchData();
+          }}>House Ads</Button>
+        </Col>
+        <Col className="text-center">
+          <Button variant="outline-primary" onClick={() => {
+            setSelectedCategory('apartment')
+            fetchData();
+          }}>Apartment Ads</Button>
+        </Col>
+        <Col className="text-center">
+          <Button variant="outline-primary" onClick={() => {
+            setSelectedCategory('office')
+            fetchData()
+          }}>Office Ads</Button>
+        </Col>
       </Row>
+
+      {/* Conditionally render tables based on the selected category */}
+      {selectedCategory === 'house' && renderAdsTable(houses, 'house', apiUrls.HOUSE_SELLING_AD_UPDATE)}
+      {selectedCategory === 'apartment' && renderAdsTable(apartments, 'apartment', apiUrls.Apartment_SELLING_AD_UPDATE)}
+      {selectedCategory === 'office' && renderAdsTable(offices, 'office', apiUrls.Office_SELLING_AD_UPDATE)}
+
+      {/* House Modal */}
+      <HouseModal
+        show={showHouseModal}
+        onHide={() => setShowHouseModal(false)}
+        ad={selectedAd}
+      />
+
+      {/* Apartment Modal */}
+      <ApartmentModal
+        show={showApartmentModal}
+        onHide={() => setShowApartmentModal(false)}
+        ad={selectedAd}
+      />
+
+      {/* Office Modal */}
+      <OfficeModal
+        show={showOfficeModal}
+        onHide={() => setShowOfficeModal(false)}
+        ad={selectedAd}
+      />
     </Container>
   );
 };

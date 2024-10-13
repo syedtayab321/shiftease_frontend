@@ -3,6 +3,8 @@ import './../../assets/Providercss/packages.css';
 import axios from "axios";
 import AddPackage from "./AddPackage";
 import { Button, FormControl, Card, Row, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'; // Import icons
 import apiUrls from '../../ApiUrls';
 
 const Packages = () => {
@@ -93,11 +95,11 @@ const Packages = () => {
             <Col key={pkg.id} md={4} sm={6} className="mb-4">
               <Card>
                 <Card.Img
-                    variant="top"
-                    src={`${apiUrls.MAIN_URL}${pkg.package_image}`}
-                    alt={pkg.package_name}
-                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                  />
+                  variant="top"
+                  src={`${apiUrls.MAIN_URL}${pkg.package_image}`}
+                  alt={pkg.package_name}
+                  style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                />
                 <Card.Body>
                   <Card.Title>{pkg.package_name}</Card.Title>
                   <Card.Text>
@@ -109,14 +111,14 @@ const Packages = () => {
                     className="actionButton me-2"
                     onClick={() => UpdateModal(pkg.id)}
                   >
-                    Update
+                    <FontAwesomeIcon icon={faEdit} /> {/* Update icon */}
                   </Button>
                   <Button
                     variant="danger"
                     className="deleteButton"
                     onClick={() => DeletePackage(pkg.id)}
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrashAlt} /> {/* Delete icon */}
                   </Button>
                 </Card.Body>
               </Card>

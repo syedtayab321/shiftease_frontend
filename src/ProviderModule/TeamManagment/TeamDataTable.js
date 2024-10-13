@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BsPencilSquare, BsTrash } from 'react-icons/bs'; // Import icons
 import "./../../assets/Providercss/teamtable.css";
 import AddTeamMemberModal from "./AddTeamMembers";
 import apiUrls from "../../ApiUrls";
@@ -8,10 +9,12 @@ const TeamTable = () => {
   const [showModal, setShowModal] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [memberid,setMemberId]=useState('');
+  const [memberid, setMemberId] = useState('');
+
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const Companyid = localStorage.getItem("UserID");
+
   const fetchTeamData = async () => {
     try {
       const response = await axios.get(`${apiUrls.PROVIDER_TEAM_DATA_GET}${Companyid}`);
@@ -22,7 +25,7 @@ const TeamTable = () => {
         setTeamMembers([]);
       }
     } catch (error) {
-      console.error("Error fetching packages data:", error);
+      console.error("Error fetching team data:", error);
       alert("No team member data found");
     }
   };
@@ -33,49 +36,50 @@ const TeamTable = () => {
     }
   }, [Companyid]);
 
- const handleadding=()=>{
+  const handleAdding = () => {
     fetchTeamData();
- }
-const filteredTeamMembers = teamMembers.filter((member) => {
-  const searchTermLower = searchTerm.toLowerCase();
-  const teamName = member.team_name ? member.team_name.toLowerCase() : "";
-  const memberId = member.id ? String(member.id) : "";
-  const memberName = member.team_member_name ? member.team_member_name.toLowerCase() : "";
-  const memberRole = member.team_member_role ? member.team_member_role.toLowerCase() : "";
-  const memberEmail = member.team_member_email ? member.team_member_email.toLowerCase() : "";
-  const memberPhone = member.team_member_phone ? String(member.team_member_phone) : "";
+  };
 
-  return (
-    teamName.includes(searchTermLower) ||
-    memberRole.includes(searchTermLower) ||
-    memberId.includes(searchTermLower) ||
-    memberName.includes(searchTermLower) ||
-    memberEmail.includes(searchTermLower) ||
-    memberPhone.includes(searchTerm)
-  );
-});
+  const filteredTeamMembers = teamMembers.filter((member) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      member.team_name?.toLowerCase().includes(searchTermLower) ||
+      member.team_member_role?.toLowerCase().includes(searchTermLower) ||
+      String(member.id).includes(searchTermLower) ||
+      member.team_member_name?.toLowerCase().includes(searchTermLower) ||
+      member.team_member_email?.toLowerCase().includes(searchTermLower) ||
+      String(member.team_member_phone).includes(searchTerm)
+    );
+  });
 
   const DeleteTeamMember = async (id) => {
-     try {
-      const response = await axios.delete(`${apiUrls.PROVIDER_TEAM_DATA_DELETE}${id}`);
+    try {
+      await axios.delete(`${apiUrls.PROVIDER_TEAM_DATA_DELETE}${id}`);
       fetchTeamData();
     } catch (error) {
-      console.error("Error fetching packages data:", error);
-      alert("An error occurred while fetching package data.");
+      console.error("Error deleting team member:", error);
+      alert("An error occurred while deleting the team member.");
     }
   };
 
-  const UpdateModal=(team_id)=>{
-      setMemberId(team_id);
-      handleShow();
-  }
-    const AddModal=()=>{
-      setMemberId('');
-      handleShow();
-  }
+  const UpdateModal = (team_id) => {
+    setMemberId(team_id);
+    handleShow();
+  };
+
+  const AddModal = () => {
+    setMemberId('');
+    handleShow();
+  };
+
   return (
     <>
-      <AddTeamMemberModal show={showModal} handleClose={handleClose} onTeamAdded={handleadding} teamMemberId={memberid}/>
+      <AddTeamMemberModal
+        show={showModal}
+        handleClose={handleClose}
+        onTeamAdded={handleAdding}
+        teamMemberId={memberid}
+      />
       <div className="team-table-container">
         <h2 className="team-table-title">Team Members</h2>
 
@@ -87,27 +91,28 @@ const filteredTeamMembers = teamMembers.filter((member) => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-bar"
           />
-          <button onClick={()=>AddModal()} className="btn btn-success add-button">
+          <button onClick={AddModal} className="btn btn-success add-button">
             Add Team Member
           </button>
         </div>
-         <div className='table-responsive'>
-          <table className="team-table ">
-          <thead>
-          <tr>
-            <th>Member ID</th>
-            <th>Team Name</th>
-            <th>Member Name</th>
-            <th>Member Role</th>
-            <th>Member Email</th>
-            <th>Mobile Number</th>
-            <th>Member Cnic</th>
-            <th>Update</th>
-            <th>Delete</th>
-          </tr>
-          </thead>
-          <tbody>
-            {filteredTeamMembers.map((member, index) => (
+
+        <div className="table-responsive">
+          <table className="team-table">
+            <thead>
+              <tr>
+                <th>Member ID</th>
+                <th>Team Name</th>
+                <th>Member Name</th>
+                <th>Member Role</th>
+                <th>Member Email</th>
+                <th>Mobile Number</th>
+                <th>Member Cnic</th>
+                <th>Update</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTeamMembers.map((member, index) => (
                 <tr key={index}>
                   <td>{member.id}</td>
                   <td>{member.team_name}</td>
@@ -117,23 +122,33 @@ const filteredTeamMembers = teamMembers.filter((member) => {
                   <td>{member.team_member_phone}</td>
                   <td>{member.team_member_cnic}</td>
                   <td>
-                    <button className="btn btn-warning" onClick={()=>UpdateModal(member.id)}>Update</button>
+                    <BsPencilSquare
+                      size={24}
+                      color="orange"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => UpdateModal(member.id)}
+                    />
                   </td>
                   <td>
-                    <button className="btn btn-danger" onClick={()=>DeleteTeamMember(member.id)}>Delete</button>
+                    <BsTrash
+                      size={24}
+                      color="red"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => DeleteTeamMember(member.id)}
+                    />
                   </td>
                 </tr>
-            ))}
-            {filteredTeamMembers.length === 0 && (
-              <tr>
-                <td colSpan="7" className="text-center">
-                  No team members found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-         </div>
+              ))}
+              {filteredTeamMembers.length === 0 && (
+                <tr>
+                  <td colSpan="9" className="text-center">
+                    No team members found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

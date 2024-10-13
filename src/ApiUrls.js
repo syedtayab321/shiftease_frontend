@@ -1,5 +1,5 @@
-// const BASE_URL = "http://192.168.18.2:7666";
-const BASE_URL = "http://192.168.112.18:7666";
+const BASE_URL = "http://192.168.18.2:7666";
+// const BASE_URL = "http://192.168.112.18:7666";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
   // provider realted data apis
@@ -16,13 +16,13 @@ const apiUrls = {
   PROVIDER_PACKAGE_POST:`${BASE_URL}/providerapis/packagesdata/`,
   // house selling ads data
   HOUSE_SELLING_AD_GET:`${BASE_URL}/adminapis/HouseSellingAdData/`,
-  HOUSE_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/HouseSellingAdData/id=`,
+  HOUSE_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/HouseSellingAdData/?id=`,
   // apratment selling ads data
   Apartment_SELLING_AD_GET:`${BASE_URL}/adminapis/ApartmentSellingAdData/`,
-  Apartment_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/ApartmentSellingAdData/id=`,
+  Apartment_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/ApartmentSellingAdData/?id=`,
  //  office selling ads data
   Office_SELLING_AD_GET:`${BASE_URL}/adminapis/OfficeSellingAdData/`,
-  Office_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/OfficeSellingAdData/id=`,
+  Office_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/OfficeSellingAdData/?id=`,
   // users data related data apis
   BUYER_GET_DATA:`${BASE_URL}/adminapis/UserSignUp/`,
   // providers company team data related
