@@ -29,10 +29,10 @@ const OrderMainPage = () => {
 
   const handleLocationClick = async (location) => {
     try {
-      const geocodeResponse = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+      const geocodeResponse = await axios.get(`https://maps.gomaps.pro/maps/api/geocode/json`, {
         params: {
           address: location,
-          key: 'AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao',
+          key: 'AlzaSyHLiNiuRBPru-PvvUkMY-miF08naHFDWdo',
         },
       });
 
@@ -66,7 +66,8 @@ const OrderMainPage = () => {
       {ordersData.length === 0 ? (
         <p>No orders found.</p>
       ) : (
-        <table className="table">
+        <div className='table-responsive'>
+          <table className="table">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -98,6 +99,7 @@ const OrderMainPage = () => {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       <Modal show={showModal} onHide={handleCloseModal}>
@@ -106,7 +108,7 @@ const OrderMainPage = () => {
         </Modal.Header>
         <Modal.Body>
           {selectedLocation && (
-            <LoadScript googleMapsApiKey="AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao">
+            <LoadScript googleMapsApiKey="AlzaSyHLiNiuRBPru-PvvUkMY-miF08naHFDWdo">
               <GoogleMap
                 mapContainerStyle={{ height: '400px', width: '100%' }}
                 center={selectedLocation}

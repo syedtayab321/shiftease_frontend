@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Spinner, Modal, Button } from 'react-bootstrap';
+import { Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Badge } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import './../../assets/Admincss/adminstyle.css';
 import apiUrls from '../../ApiUrls';
 
 export default function ProviderDataTable() {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [actionLoading, setActionLoading] = useState(false); // New state for action loading
+    const [actionLoading, setActionLoading] = useState(false);
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedID, setSelectedID] = useState('');
     const [selectedEmail, setSelectedEmail] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Fetch data from the server
     const fetchItems = async () => {
         try {
             const response = await axios.get(apiUrls.PROVIDER_ACCOUNT_GET);
@@ -33,7 +36,7 @@ export default function ProviderDataTable() {
         fetchItems();
     }, []);
 
-    const handleshowModal = (id,email) => {
+    const handleShowModal = (id, email) => {
         setSelectedID(id);
         setSelectedEmail(email);
         setShowModal(true);
@@ -51,7 +54,7 @@ export default function ProviderDataTable() {
             await axios.post(apiUrls.PROVIDER_ACCOUNT_APPROVAL, {
                 request_status: status,
                 id: selectedID,
-                email:selectedEmail,
+                email: selectedEmail,
             });
             setActionLoading(false);
             window.location.reload();
@@ -60,13 +63,15 @@ export default function ProviderDataTable() {
             setActionLoading(false);
         }
     };
-    const DeleteData=async (CompanyId)=>{
-               const response = await axios.delete(`${apiUrls.PROVIDER_DELETE_ACCOUNT}${CompanyId}`);
-               if (response){
-                   alert(response.data)
-               }
-    }
-    const filteredItems = items.filter(user =>
+
+    const deleteData = async (CompanyId) => {
+        const response = await axios.delete(`${apiUrls.PROVIDER_DELETE_ACCOUNT}${CompanyId}`);
+        if (response) {
+            alert(response.data);
+        }
+    };
+
+    const filteredItems = items.filter((user) =>
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.company_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -74,9 +79,7 @@ export default function ProviderDataTable() {
     if (loading) {
         return (
             <div className="text-center my-5">
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
+                <CircularProgress />
             </div>
         );
     }
@@ -87,95 +90,127 @@ export default function ProviderDataTable() {
 
     return (
         <>
-            {/* Modal for Account Approval */}
-            <Modal show={showModal} onHide={handleCloseModal} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Account Approvals</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+            <Modal
+                open={showModal}
+                onClose={handleCloseModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: 1 }}>
+                    <h2>Account Approvals</h2>
                     <p>Do you want to approve or reject the request for {selectedEmail}?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal} disabled={actionLoading}>
-                        Cancel
-                    </Button>
-                    <Button variant="success" onClick={() => handleActionClick('Approved')} disabled={actionLoading}>
-                        {actionLoading ? <Spinner animation="border" size="sm" /> : 'Approve'}
-                    </Button>
-                    <Button variant="danger" onClick={() => handleActionClick('Rejected')} disabled={actionLoading}>
-                        {actionLoading ? <Spinner animation="border" size="sm" /> : 'Reject'}
-                    </Button>
-                </Modal.Footer>
+                    <div>
+                        <Button onClick={handleCloseModal} variant="outlined" disabled={actionLoading}>Cancel</Button>
+                        <Button
+                            onClick={() => handleActionClick('Approved')}
+                            variant="contained"
+                            color="success"
+                            disabled={actionLoading}
+                            sx={{ ml: 2 }}
+                        >
+                            {actionLoading ? <CircularProgress size={20} /> : 'Approve'}
+                        </Button>
+                        <Button
+                            onClick={() => handleActionClick('Rejected')}
+                            variant="contained"
+                            color="error"
+                            disabled={actionLoading}
+                            sx={{ ml: 2 }}
+                        >
+                            {actionLoading ? <CircularProgress size={20} /> : 'Reject'}
+                        </Button>
+                    </div>
+                </Box>
             </Modal>
 
-            {/* Main User Management Table */}
             <div className="container">
                 <h2 className="mb-4 text-center">Company Management</h2>
 
-                {/* Search Bar */}
                 <div className="mb-4 d-flex justify-content-between align-items-center">
-                    <input
-                        type="text"
-                        placeholder="Search by email or company name"
-                        className="form-control w-50"
-                        onChange={e => setSearchTerm(e.target.value)}
+                    <TextField
+                        label="Search by email or company name"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
-                <div className="table-responsive">
-                    <table className="table table-striped table-hover">
-                        <thead className="table-dark">
-                        <tr>
-                            <th>Company Id</th>
-                            <th>Email</th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Password</th>
-                            <th>Zip Code</th>
-                            <th>Services</th>
-                            <th>Request Status</th>
-                            <th>Action</th>
-                            <th>Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                <TableContainer component={Paper}>
+                    <Table aria-label="provider table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Avatar</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Company Id</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Email</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Company Name</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Address</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Password</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Zip Code</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Services</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Request Status</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Action</TableCell>
+                                <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Delete</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
                             {filteredItems.map((user, index) => (
-                                <tr key={index}>
-                                    <td>{user.id}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.company_name}</td>
-                                    <td>{user.location}</td>
-                                    <td>{user.password}</td>
-                                    <td>{user.zipcode}</td>
-                                    <td>{user.service}</td>
-                                    <td>
-                                        {user.request_status === 'pending' && (
-                                            <span className='badge bg-warning text-dark'>{user.request_status}</span>
-                                        )}
-                                        {user.request_status === 'Rejected' && (
-                                            <span className='badge bg-danger'>{user.request_status}</span>
-                                        )}
-                                        {user.request_status === 'Approved' && (
-                                            <span className='badge bg-success'>{user.request_status}</span>
-                                        )}
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-success btn-sm me-2"
-                                                onClick={() => handleshowModal(user.id,user.email)}
-                                                disabled={actionLoading}>
+                                <TableRow
+                                    key={index}
+                                    sx={{
+                                        '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
+                                        '&:hover': { backgroundColor: '#e0f7fa' },
+                                    }}
+                                >
+                                    <TableCell>
+                                        <Avatar alt={user.company_name} src={`${apiUrls.MAIN_URL}${user.profile_image}`} />
+                                    </TableCell>
+                                    <TableCell>{user.id}</TableCell>
+                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>{user.company_name}</TableCell>
+                                    <TableCell>{user.location}</TableCell>
+                                    <TableCell>{user.password}</TableCell>
+                                    <TableCell>{user.zipcode}</TableCell>
+                                    <TableCell>{user.service}</TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            color={
+                                                user.request_status === 'pending'
+                                                    ? 'warning'
+                                                    : user.request_status === 'Rejected'
+                                                    ? 'error'
+                                                    : 'success'
+                                            }
+                                            badgeContent={user.request_status}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="small"
+                                            onClick={() => handleShowModal(user.id, user.email)}
+                                            disabled={actionLoading}
+                                            sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+                                        >
                                             Approve/Reject
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-danger btn-sm"
-                                         onClick={() => DeleteData(user.id)}
-                                        >Delete</button>
-                                    </td>
-                                </tr>
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            size="small"
+                                            onClick={() => deleteData(user.id)}
+                                            sx={{ backgroundColor: '#d32f2f', '&:hover': { backgroundColor: '#c62828' } }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </div>
         </>
     );

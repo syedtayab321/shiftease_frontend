@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 import UserTable from "./ManageUsers/UserTable";
 import AdRequestsPage from "./ManageAdsRequests/AdRequests";
 import MessageList from './ManageMessages/MessagePage';
+import PaymentTable from './ManagePayments/PaymentViewPage';
 export default function AdminDashboard(props){
   const [selectedSection, setSelectedSection] = useState('manage_providers');
   var adminemail = localStorage.getItem('adminEmail');
@@ -29,6 +30,7 @@ export default function AdminDashboard(props){
                     {selectedSection === 'manage_users' && <UserTable/>}
                     {selectedSection === 'manage_ad_requests' && <AdRequestsPage/>}
                     {selectedSection === 'manage_messages' && <MessageList/>}
+                    {selectedSection === 'manage_payments' && <PaymentTable/>}
                 </div>
             </div>
         </>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, TextField, Badge } from '@mui/material';
+import { FaSearch } from "react-icons/fa";
 import apiUrls from "../../ApiUrls";
-import "./../../assets/Providercss/requests.css";
 import RequestApprovalModal from "./requestApprovalModal";
 
 const ClientRequests = () => {
@@ -26,6 +27,7 @@ const ClientRequests = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchRequests();
   }, []);
@@ -53,107 +55,113 @@ const ClientRequests = () => {
   const handleDeleteRequest = async (id) =>{
     if (window.confirm("Are you sure you want to delete this request?")) {
       try{
-        await axios.delete(`${apiUrls.PROVIDER_ORDER_REQUEST_DELETE}${id}`)
+        await axios.delete(`${apiUrls.PROVIDER_ORDER_REQUEST_DELETE}${id}`);
         fetchRequests();
       }
       catch (e){
-            alert(e.toLowerCase)
+        alert(e.toLowerCase());
       }
     }
   };
 
   return (
-    <div className="client-requests-container">
-      <h2 className="client-requests-header">Client Requests</h2>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom sx={{ color: 'skyblue', fontWeight: 'bold' }}>
+        Client Requests
+      </Typography>
 
-      <div className="search-bar-container">
-        <input
-          type="text"
+      <Box display="flex" justifyContent="center" sx={{ mb: 3 }}>
+        <TextField
           placeholder="Search by Name, Package, ID, or Location"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-bar"
+          variant="outlined"
+          sx={{ width: '50%' }}
+          InputProps={{
+            startAdornment: <FaSearch style={{ marginRight: '10px', color: 'black' }} />
+          }}
         />
-      </div>
+      </Box>
 
       {loading ? (
-        <p>Loading...</p>
+        <Typography variant="h6" align="center">Loading...</Typography>
       ) : error ? (
-        <p>{error}</p>
+        <Typography variant="h6" align="center">{error}</Typography>
       ) : (
-        <div className="table-responsive">
-          <table className="client-requests-table">
-            <thead>
-              <tr>
-                <th>Client Name</th>
-                <th>Package Name</th>
-                <th>Package ID</th>
-                <th>Price</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Request Status</th>
-                <th>Actions</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
+        <TableContainer component={Paper} elevation={3} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: 'black' }}>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Client Name</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Package Name</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Package ID</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Price</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Location</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Request Status</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Actions</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((request) => (
-                  <tr key={request.id}>
-                    <td>{request.client_name}</td>
-                    <td>{request.package_name}</td>
-                    <td>{request.package_id}</td>
-                    <td>${request.package_price}</td>
-                    <td>{request.location}</td>
-                    <td>{request.service_date}</td>
-                    <td>
-                      {request.request_status === "Pending" && (
-                        <span className="badge bg-warning text-dark">
-                          {request.request_status}
-                        </span>
-                      )}
-                      {request.request_status === "Rejected" && (
-                        <span className="badge bg-danger">
-                          {request.request_status}
-                        </span>
-                      )}
-                      {request.request_status === "Approved" && (
-                        <span className="badge bg-success">
-                          {request.request_status}
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-outline-success"
+                  <TableRow key={request.id} hover>
+                    <TableCell align="center">{request.client_name}</TableCell>
+                    <TableCell align="center">{request.package_name}</TableCell>
+                    <TableCell align="center">{request.package_id}</TableCell>
+                    <TableCell align="center">${request.package_price}</TableCell>
+                    <TableCell align="center">{request.location}</TableCell>
+                    <TableCell align="center">{request.service_date}</TableCell>
+                    <TableCell align="center">
+                      <Badge
+                        badgeContent={request.request_status}
+                        color={
+                          request.request_status === "Pending" ? "warning"
+                          : request.request_status === "Rejected" ? "error"
+                          : "success"
+                        }
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: 'skyblue',
+                          '&:hover': { backgroundColor: '#5DADE2' },
+                          color: '#fff',
+                          fontWeight: 'bold',
+                        }}
                         onClick={() => handleApproveClick(request)}
                       >
                         Approve
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-outline-danger"
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        color="error"
+                        sx={{ color: '#fff', fontWeight: 'bold' }}
                         onClick={() => handleDeleteRequest(request.id)}
                       >
                         Delete
-                      </button>
-                    </td>
-                  </tr>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 ))
               ) : (
-                <tr>
-                  <td colSpan="7" className="text-center">
+                <TableRow>
+                  <TableCell colSpan="9" align="center">
                     No requests found
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
-      {/* Render the Approval Modal */}
       {showModal && selectedRequest && (
         <RequestApprovalModal
           request={selectedRequest}
@@ -161,7 +169,7 @@ const ClientRequests = () => {
           fetchdata={fetchRequests}
         />
       )}
-    </div>
+    </Container>
   );
 };
 
