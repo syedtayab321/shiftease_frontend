@@ -40,12 +40,14 @@ const apiUrls = {
   PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`,
   PROVIDER_APPROVED_ORDERS_UPDATE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
   PROVIDER_APPROVED_ORDERS_DELETE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
-  //  Message Apis
+  //  Provider Message Apis
   PROVIDER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/providerMessage/`,
-  PROVIDER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/providerMessage/?receiverName=`,
+  PROVIDER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/providerMessage/?receiverName=&senderName=`,
   PROVIDER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/providerMessage/?messageId=`,
-
+  //  Admin Message Apis
   ADMIN_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
+  ADMIN_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
+  ADMIN_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,
 };
 
 export default apiUrls;

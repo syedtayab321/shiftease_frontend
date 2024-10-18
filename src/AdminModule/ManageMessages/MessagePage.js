@@ -1,68 +1,111 @@
-import React from 'react';
-import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Typography, Paper } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Typography, Paper, Avatar } from '@mui/material';
 import { FaUserCircle } from 'react-icons/fa';
-
-const messages = [
-  { id: 1, sender: 'John Doe', lastMessage: 'How are you?', time: '10:33 AM', status: 'Unread' },
-  { id: 2, sender: 'Jane Smith', lastMessage: 'Can we meet?', time: '9:15 AM', status: 'Read' },
-  { id: 3, sender: 'Alice Johnson', lastMessage: 'Thank you!', time: 'Yesterday', status: 'Read' },
-];
+import axios from 'axios';
+import apiUrls from "../../ApiUrls";
+import AdminChatPage from "./chatPage";
 
 const MessageTable = () => {
+  const [messages, setMessages] = useState([]);
+  const [selectedMessage, setSelectedMessage] = useState(null); // Initially set to null
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`${apiUrls.ADMIN_MESSAGE_API_GET}`);
+        const groupedMessages = groupMessagesBySender(response.data);
+        setMessages(groupedMessages);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+    fetchMessages();
+  }, []);
+
+  const groupMessagesBySender = (messages) => {
+    const grouped = messages.reduce((acc, message) => {
+      const { senderName } = message;
+      if (!acc[senderName] || new Date(message.time) > new Date(acc[senderName].time)) {
+        acc[senderName] = message;
+      }
+      return acc;
+    }, {});
+    return Object.values(grouped);
+  };
+
+  const handleOpenChat = (message) => {
+    setSelectedMessage(message); // Set the selected message before opening modal
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedMessage(null); // Reset selected message on close
+  };
+
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom sx={{ color: 'skyblue', fontWeight: 'bold' }}>
-        Messages
-      </Typography>
+    <>
+      <Container maxWidth="md" sx={{ mt: 4, bgcolor: '#f5f5f5', p: 2, borderRadius: 2 }}>
+        <Typography variant="h4" align="center" gutterBottom sx={{ color: 'darkblue', fontWeight: 'bold', mb: 4 }}>
+          Messages
+        </Typography>
 
-      <TableContainer component={Paper} elevation={3} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: 'skyblue' }}>
-              <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Sender</TableCell>
-              <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Last Message</TableCell>
-              <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Time</TableCell>
-              <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Status</TableCell>
-              <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Action</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {messages.map((message) => (
-              <TableRow key={message.id} hover>
-                <TableCell align="center">
-                  <Box display="flex" alignItems="center" justifyContent="center">
-                    <FaUserCircle size={28} color="skyblue" style={{ marginRight: '8px' }} />
-                    {message.sender}
-                  </Box>
-                </TableCell>
-                <TableCell align="center">{message.lastMessage}</TableCell>
-                <TableCell align="center">{message.time}</TableCell>
-                <TableCell align="center">
-                  <Typography color={message.status === 'Unread' ? 'error' : 'success'}>
-                    {message.status}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: 'skyblue',
-                      '&:hover': { backgroundColor: '#5DADE2' },
-                      color: '#fff',
-                      fontWeight: 'bold',
-                    }}
-                    onClick={() => alert(`Opening chat with ${message.sender}`)}
-                  >
-                    Open Chat
-                  </Button>
-                </TableCell>
+        <TableContainer component={Paper} elevation={3} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: 'darkblue' }}>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Sender</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Last Message</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Time</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
+            </TableHead>
+
+            <TableBody>
+              {messages.map((message) => (
+                <TableRow key={message.id} hover sx={{ '&:hover': { backgroundColor: '#f1f9ff' } }}>
+                  <TableCell align="center">
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                      <Avatar sx={{ bgcolor: 'darkblue', mr: 1 }}>
+                        <FaUserCircle size={24} />
+                      </Avatar>
+                      {message.senderName}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">{message.content}</TableCell>
+                  <TableCell align="center">{message.time}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: 'darkblue',
+                        '&:hover': { backgroundColor: '#5DADE2' },
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        borderRadius: 2,
+                      }}
+                      onClick={() => handleOpenChat(message)}>
+                      Open Chat
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+
+      {selectedMessage && (
+        <AdminChatPage
+          show={isModalOpen}
+          handleClose={handleCloseModal}
+          senderName={'Admin'}
+          receiverName={selectedMessage.senderName}
+          senderId={1}
+          receiverId={selectedMessage.senderId} />
+      )}
+    </>
   );
 };
 

@@ -1,79 +1,127 @@
-import React, { useState } from 'react';
-import { Button, Container, Row, Col, Form, InputGroup, Modal } from 'react-bootstrap';
-import { FaPaperPlane, FaUserCircle } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { Modal, Box, TextField, IconButton, Typography, Avatar, Grid, Paper } from '@mui/material';
+import { Send as SendIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { format, parseISO } from 'date-fns'; // Use parseISO to handle ISO date strings
+import axios from 'axios';
+import apiUrls from "../../ApiUrls";
 
-const initialMessages = [
-  { id: 1, sender: 'John Doe', text: 'Hello!', time: '10:30 AM', isSender: false },
-  { id: 2, sender: 'You', text: 'Hi John!', time: '10:32 AM', isSender: true },
-  { id: 3, sender: 'John Doe', text: 'How are you?', time: '10:33 AM', isSender: false },
-];
-
-const ChatPage = ({ show, handleClose }) => {
-  const [messages, setMessages] = useState(initialMessages);
+const AdminChatPage = ({ show, handleClose, senderId, senderName, receiverId, receiverName }) => {
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
-  const sendMessage = () => {
+  const fetchMessages = async () => {
+    try {
+      const response = await axios.get(`${apiUrls.ADMIN_MESSAGE_API_GET}${senderName}${receiverName}`);
+      if (response.data === null) {
+        alert('No messages yet');
+      } else {
+        setMessages(response.data.map(msg => ({
+          ...msg,
+          message_time: msg.message_time ? format(parseISO(msg.message_time), 'PPP p') : 'Invalid Date',
+        })));
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (show) {
+      fetchMessages();
+    }
+  }, [show]);
+
+  const sendMessage = async () => {
     if (newMessage.trim()) {
-      const newMsg = {
-        id: messages.length + 1,
-        sender: 'You',
-        text: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isSender: true,
+      const messageData = {
+        senderId,
+        receiverId,
+        receiverName,
+        senderName,
+        content: newMessage,
+        message_time: new Date().toISOString(),
       };
-      setMessages([...messages, newMsg]);
-      setNewMessage('');
+
+      try {
+        const response = await axios.post(`${apiUrls.ADMIN_MESSAGE_API_POST}`, messageData);
+         fetchMessages()
+        setNewMessage('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+    }
+  };
+
+  const deleteMessage = async (id) => {
+    try {
+      await axios.delete(`${apiUrls.ADMIN_MESSAGE_API_DELETE}${id}`);
+      setMessages(messages.filter((msg) => msg.id !== id));
+    } catch (error) {
+      console.error('Error deleting message:', error);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg" centered className="chat-modal">
-      <Modal.Header closeButton className="bg-primary text-white">
-        <Row className="align-items-center w-100">
-          <Col xs={2} className="text-center">
-            <FaUserCircle size={50} />
-          </Col>
-          <Col xs={10}>
-            <h5 className="mb-0">John Doe</h5>
-            <p className="mb-0 text-white-50">Online</p>
-          </Col>
-        </Row>
-      </Modal.Header>
+    <Modal open={show} onClose={handleClose}>
+      <Box sx={{ maxWidth: '600px', margin: 'auto', marginTop: '2%', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 2, overflowY: 'scroll' }}>
+        <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
+          <Grid item>
+            <Avatar sx={{ width: 50, height: 50 }}>
+              {receiverName[0]}
+            </Avatar>
+          </Grid>
+          <Grid item xs>
+            <Typography variant="h6">{receiverName}</Typography>
+            <Typography variant="body2" color="textSecondary">Online</Typography>
+          </Grid>
+        </Grid>
 
-      <Modal.Body>
-        <Container className="chat-body" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+       <Box sx={{ maxHeight: '300px', width: '100%', overflowY: 'auto', mb: 2, p: 1 }}>
           {messages.map((msg) => (
-            <Row key={msg.id} className="my-2">
-              <Col className={`d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}>
-                <div
-                  className={`p-3 message-bubble ${msg.isSender ? 'bg-primary text-white' : 'bg-light text-dark'}`}
-                  style={{ borderRadius: '20px', maxWidth: '70%' }}
-                >
-                  <p className="mb-0">{msg.text}</p>
-                  <small className="text-muted">{msg.time}</small>
-                </div>
-              </Col>
-            </Row>
+            <Box
+              key={msg.id}
+              sx={{ display: 'flex', justifyContent: msg.senderName !== senderName ? 'flex-start' : 'flex-end', mb: 1,width:'100%'}}>
+              <Paper sx={{ p: 2,
+                  backgroundColor: msg.senderName !== senderName ? '#f5f5f5' : '#1976d2',
+                  color: msg.senderName !== senderName ? 'black' : 'white',
+                  borderRadius: 2,
+                  maxWidth: '50%',
+                  width:'50%',
+                  boxShadow: 2,
+                  display:'flex',
+                }}>
+                <Box sx={{ width:'80%'}}>
+                  <Typography variant="body1">{msg.content}</Typography>
+                  <Typography variant="caption" color="textSecondary">
+                     {msg.message_time}
+                  </Typography>
+                </Box>
+                <Box sx={{width:'20%'}}>
+                  <IconButton edge="end" size="small"
+                  onClick={() => deleteMessage(msg.id)} sx={{ color: msg.senderName !== senderName ? 'blue' : 'red' }}>
+                  <DeleteIcon />
+                </IconButton>
+                </Box>
+              </Paper>
+            </Box>
           ))}
-        </Container>
-      </Modal.Body>
+        </Box>
 
-      <Modal.Footer className="d-flex justify-content-between">
-        <InputGroup className="mb-3 flex-grow-1">
-          <Form.Control
-            placeholder="Type a message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            className="message-input"
-          />
-          <Button variant="primary" onClick={sendMessage}>
-            <FaPaperPlane />
-          </Button>
-        </InputGroup>
-      </Modal.Footer>
+        <Grid container alignItems="center" spacing={1}>
+          <Grid item xs>
+            <TextField fullWidth variant="outlined" placeholder="Type a message..."
+              value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+            />
+          </Grid>
+          <Grid item>
+            <IconButton color="primary" onClick={sendMessage}>
+              <SendIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
     </Modal>
   );
 };
 
-export default ChatPage;
+export default AdminChatPage;
