@@ -9,7 +9,6 @@ import {
   FaBoxOpen
 } from "react-icons/fa";
 import './../../assets/Providercss/providersidebar.css';
-import logo from './../../assets/images/logo.png';
 
 const navitems = [
   { text: 'Home', icon: <FaHome />, link: "home" },

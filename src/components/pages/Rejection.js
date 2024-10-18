@@ -1,8 +1,7 @@
 import React from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Rejection() {
-    const navigate = useNavigate();
     return (
         <div className='main-confirmatio'>
             <div className="container mt-5">

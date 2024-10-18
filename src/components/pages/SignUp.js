@@ -9,7 +9,7 @@ import apiUrls from "../../ApiUrls";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false); // For showing the spinner
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <div className='main-signup-section'>
@@ -48,7 +48,7 @@ const SignUp = () => {
                 .required("Required"),
               image: Yup.mixed().required("Required") // Validation for image
             })}
-            onSubmit={async (values, { resetForm, setErrors }) => {
+            onSubmit={async (values, { setErrors }) => {
               setIsSubmitting(true);
 
               const formData = new FormData();
@@ -63,7 +63,7 @@ const SignUp = () => {
               formData.append('profile_image', values.image); // Append image file
 
               try {
-                const response = await axios.post(`${apiUrls.PROVIDER_CREATE_ACCOUNT}`, formData, {
+                await axios.post(`${apiUrls.PROVIDER_CREATE_ACCOUNT}`, formData, {
                   headers: {
                     'Content-Type': 'multipart/form-data',
                   }

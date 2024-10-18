@@ -26,10 +26,10 @@ export default function AppSection() {
                                     some form, by
                                 </p>
                                 <div className="btn-box">
-                                    <a href="">
+                                    <a href="#">
                                         <img src={appstorepicture} alt=""/>
                                     </a>
-                                    <a href="">
+                                    <a href="#">
                                         <img src={playstorepicture} alt=""/>
                                     </a>
                                 </div>

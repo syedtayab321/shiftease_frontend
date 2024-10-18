@@ -99,7 +99,14 @@ const TopBar = () => {
         </div>
       </div>
       {/* message modal */}
-      <ProviderChatPage show={showMessageModal} handleClose={MessageCloseModal} />
+      <ProviderChatPage
+          show={showMessageModal}
+          handleClose={MessageCloseModal}
+          senderId={localStorage.getItem('UserID')}
+          senderName={localStorage.getItem('CompanyName')}
+          receiverId={1}
+          receiverName={'Admin'}
+      />
     </>
   );
 };

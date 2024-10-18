@@ -6,7 +6,6 @@ import apiUrls from "../../ApiUrls";
 export default function UserTable(){
     const [items,setItems]=useState([])
      const [loading, setLoading] = useState(true);
-    const [actionLoading, setActionLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const [error, setError] = useState('');

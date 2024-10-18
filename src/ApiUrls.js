@@ -1,4 +1,5 @@
-const BASE_URL = "http://192.168.18.2:2346";
+// const BASE_URL = "http://192.168.18.2:2346";
+const BASE_URL = "http://192.168.112.18:2346";
 // const BASE_URL = "http://192.168.112.18:7666";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
@@ -38,7 +39,13 @@ const apiUrls = {
 
   PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`,
   PROVIDER_APPROVED_ORDERS_UPDATE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
-  PROVIDER_APPROVED_ORDERS_DELETE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`
+  PROVIDER_APPROVED_ORDERS_DELETE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
+  //  Message Apis
+  PROVIDER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/providerMessage/`,
+  PROVIDER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/providerMessage/?receiverName=`,
+  PROVIDER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/providerMessage/?messageId=`,
+
+  ADMIN_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
 };
 
 export default apiUrls;
