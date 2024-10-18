@@ -7,7 +7,7 @@ import AdminChatPage from "./chatPage";
 
 const MessageTable = () => {
   const [messages, setMessages] = useState([]);
-  const [selectedMessage, setSelectedMessage] = useState(null); // Initially set to null
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,8 @@ const MessageTable = () => {
       try {
         const response = await axios.get(`${apiUrls.ADMIN_MESSAGE_API_GET}`);
         const groupedMessages = groupMessagesBySender(response.data);
-        setMessages(groupedMessages);
+        const filteredMessages = groupedMessages.filter(message => message.senderName !== 'Admin'); // Filter out admin messages
+        setMessages(filteredMessages);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -35,13 +36,13 @@ const MessageTable = () => {
   };
 
   const handleOpenChat = (message) => {
-    setSelectedMessage(message); // Set the selected message before opening modal
+    setSelectedMessage(message);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedMessage(null); // Reset selected message on close
+    setSelectedMessage(null);
   };
 
   return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, IconButton, Typography, Avatar, Grid, Paper } from '@mui/material';
-import { Send as SendIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { format, parseISO } from 'date-fns'; // Use parseISO to handle ISO date strings
+import { Send as SendIcon, Delete as DeleteIcon,Refresh as RefreshIcon } from '@mui/icons-material';
+import { format, parseISO } from 'date-fns';
 import axios from 'axios';
 import apiUrls from "../../ApiUrls";
 
@@ -73,6 +73,11 @@ const AdminChatPage = ({ show, handleClose, senderId, senderName, receiverId, re
           <Grid item xs>
             <Typography variant="h6">{receiverName}</Typography>
             <Typography variant="body2" color="textSecondary">Online</Typography>
+          </Grid>
+          <Grid item>
+            <IconButton color="primary" onClick={fetchMessages} sx={{ ml: 2 }}>
+              <RefreshIcon />
+            </IconButton>
           </Grid>
         </Grid>
 
