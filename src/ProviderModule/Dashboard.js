@@ -11,7 +11,7 @@ import Packages from './ServicesManagment/Packages';
 import Requests from './RequestsManagement/Requests';
 import ReviewsPage from './Reviews/Reviews';
 import OrderMainPage from './OrdersManagement/OrderMainPage';
-import MessagesPage from './ManageMessages/Messages';
+import ProviderMessageTable from "./ManageMessages/MessagesTable";
 
 export default function Dashboard() {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -43,7 +43,7 @@ export default function Dashboard() {
           {selectedSection === 'home' && <OrdersTable />}
           {selectedSection === 'team' && <TeamDataTable />}
           {selectedSection === 'profile' && <UserProfile />}
-          {selectedSection === 'messages' && <MessagesPage />}
+          {selectedSection === 'messages' && <ProviderMessageTable />}
           {selectedSection === 'packages' && <Packages />}
           {selectedSection === 'requests' && <Requests />}
           {selectedSection === 'reviews' && <ReviewsPage />}

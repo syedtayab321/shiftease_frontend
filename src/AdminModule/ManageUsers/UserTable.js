@@ -1,104 +1,128 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {Spinner} from "react-bootstrap";
+import { CircularProgress, TextField, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from "@mui/material";
+import { styled } from '@mui/system';
 import apiUrls from "../../ApiUrls";
 
-export default function UserTable(){
-    const [items,setItems]=useState([])
-     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  backgroundColor: '#f9f9f9',
+  '&:hover': {
+    backgroundColor: '#f1f1f1',
+  },
+}));
 
-    const [error, setError] = useState('');
-    const fetchItems = async () => {
-        try {
-            const response = await axios.get(apiUrls.BUYER_GET_DATA);
-            if (Array.isArray(response.data)) {
-                setItems(response.data);
-            } else {
-                setItems([]);
-            }
-            setLoading(false);
-        } catch (err) {
-            setError('Error fetching data');
-            setLoading(false);
-        }
-    };
 
-    useEffect(() => {
+export default function UserTable() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get(apiUrls.BUYER_GET_DATA);
+      if (Array.isArray(response.data)) {
+        setItems(response.data);
+      } else {
+        setItems([]);
+      }
+      setLoading(false);
+    } catch (err) {
+      setError('Error fetching data');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const DeleteData = async (userid) => {
+    try {
+      const response = await axios.delete(`${apiUrls.BUYER_DELETE_DATA}${userid}`);
+      if (response.status === 200) {
+        alert('Data Deleted Successfully');
         fetchItems();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="text-center my-5">
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
-            </div>
-        );
+      }
+    } catch (e) {
+      alert(e);
     }
+  }
 
-    if (error) {
-        return <div>{error}</div>;
-    }
-    const filteredItems = items.filter(user =>
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  if (loading) {
+    return (
+      <Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Container>
     );
-    return(
-        <>
-            <div className="container">
-                <h2 className="mb-4 text-center">Users Management</h2>
+  }
 
-                {/* Search Bar */}
-                <div className="mb-4 d-flex justify-content-between align-items-center">
-                    <input
-                        type="text"
-                        placeholder="Search by email or username"
-                        className="form-control w-50"
-                        onChange={e => setSearchTerm(e.target.value)}
-                    />
-                </div>
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
-                <div className="table-responsive">
-                    <table className="table table-striped table-hover">
-                        <thead className="table-dark">
-                        <tr>
-                            <th>User Id</th>
-                            <th>Email</th>
-                            <th>User Name</th>
-                            <th>Password</th>
-                            <th>Update</th>
-                            <th>Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {filteredItems.map((user, index) => (
-                            <tr key={index}>
-                                <td>{user.id}</td>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.password}</td>
-                                <td>
-                                    <button className="btn btn-warning btn-sm me-2">Edit
-                                    </button>
-                                </td>
-                                <td>
-                                    <button className="btn btn-danger btn-sm me-2">Delete
-                                    </button>
-                                </td>
-                                {/*<td>*/}
-                                {/*    /!*<button className="btn btn-danger btn-sm"*!/*/}
-                                {/*    /!*        onClick={() => DeleteData(user.id)}*!/*/}
-                                {/*    /!*>Delete*!/*/}
-                                {/*    /!*</button>*!/*/}
-                                {/*</td>*/}
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </>
-    );
+  const filteredItems = items.filter(user =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <Container sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom style={{ fontWeight: 600 }}>Users Management</Typography>
+
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Search by email or username"
+        onChange={e => setSearchTerm(e.target.value)}
+        sx={{
+          mb: 4,
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '10px',
+          },
+        }}
+      />
+
+      <TableContainer component={Paper} elevation={6} sx={{ borderRadius: '15px', overflow: 'hidden' }}>
+        <Table>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: 'darkblue' }}>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>User Id</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>User Name</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>Email</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>User uid</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>Password</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 600 }}>Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredItems.map((user, index) => (
+              <StyledTableRow key={index}>
+                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.users_uid}</TableCell>
+                <TableCell>{user.password}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    sx={{
+                      padding: '5px 15px',
+                      borderRadius: '8px',
+                      textTransform: 'none',
+                    }}
+                    onClick={() => DeleteData(user.id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
+  );
 }

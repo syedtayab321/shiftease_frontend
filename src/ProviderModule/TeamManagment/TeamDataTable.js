@@ -105,6 +105,7 @@ const TeamTable = () => {
                 <th>Member Name</th>
                 <th>Member Role</th>
                 <th>Member Email</th>
+                <th>Occupation</th>
                 <th>Mobile Number</th>
                 <th>Member Cnic</th>
                 <th>Update</th>
@@ -119,6 +120,7 @@ const TeamTable = () => {
                   <td>{member.team_member_name}</td>
                   <td>{member.team_member_role}</td>
                   <td>{member.team_member_email}</td>
+                  <td>{member.team_member_occupation}</td>
                   <td>{member.team_member_phone}</td>
                   <td>{member.team_member_cnic}</td>
                   <td>

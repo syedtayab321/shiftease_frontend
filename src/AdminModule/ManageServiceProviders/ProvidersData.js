@@ -137,8 +137,8 @@ export default function ProviderDataTable() {
 
                 <TableContainer component={Paper}>
                     <Table aria-label="provider table">
-                        <TableHead>
-                            <TableRow>
+                        <TableHead sx={{ backgroundColor: 'darkblue' }}>
+                            <TableRow sx={{ backgroundColor: 'darkblue' }}>
                                 <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Avatar</TableCell>
                                 <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Company Id</TableCell>
                                 <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Email</TableCell>

@@ -104,7 +104,7 @@ const Packages = () => {
                   <Card.Title>{pkg.package_name}</Card.Title>
                   <Card.Text>
                     <strong>Service:</strong> {pkg.package_service} <br />
-                    <strong>Price:</strong> ${pkg.package_price}
+                    <strong>Price:</strong> {pkg.package_price} Pkr
                   </Card.Text>
                   <Button
                     variant="primary"

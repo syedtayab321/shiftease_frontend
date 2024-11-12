@@ -1,6 +1,7 @@
 // const BASE_URL = "http://192.168.18.2:2346";
-const BASE_URL = "http://192.168.112.18:2346";
-// const BASE_URL = "http://192.168.112.18:7666";
+const BASE_URL = "http://192.168.254.18:2346";
+// const BASE_URL = "http://10.115.149.37:2346";
+// const BASE_URL = "http://10.115.149.45:2346";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
   // provider realted data apis
@@ -26,6 +27,7 @@ const apiUrls = {
   Office_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/OfficeSellingAdData/?id=`,
   // users data related data apis
   BUYER_GET_DATA:`${BASE_URL}/adminapis/UserSignUp/`,
+  BUYER_DELETE_DATA:`${BASE_URL}/adminapis/UserSignUp/?UserId=`,
   // providers company team data related
   PROVIDER_TEAM_DATA_UPDATE:`${BASE_URL}/providerapis/teamdata/?id=`,
   PROVIDER_TEAM_DATA_POST:`${BASE_URL}/providerapis/teamdata/`,
@@ -48,6 +50,10 @@ const apiUrls = {
   ADMIN_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
   ADMIN_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
   ADMIN_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,
+//   user message apis
+   USER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
+   USER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
+   USER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,
 };
 
 export default apiUrls;
