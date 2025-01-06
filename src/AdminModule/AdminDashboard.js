@@ -4,20 +4,21 @@ import Sidebar from "./Components/Sidebar";
 import ProviderDataTable from "./ManageServiceProviders/ProvidersData";
 import {useNavigate} from "react-router-dom";
 import UserTable from "./ManageUsers/UserTable";
-import AdRequestsPage from "./ManageAdsRequests/AdRequests";
+
 import MessageList from './ManageMessages/MessagePage';
 import PaymentTable from './ManagePayments/PaymentViewPage';
+import RentAdsPage from "./ManageAdsRequests/AdRequests";
 export default function AdminDashboard(props){
   const [selectedSection, setSelectedSection] = useState('manage_providers');
-  var adminemail = localStorage.getItem('adminEmail');
+    const adminEmail = localStorage.getItem('adminEmail');
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
   useEffect(() => {
-    if (!adminemail) {
+    if (!adminEmail) {
       navigate("/admin");
     }
-  }, [adminemail, navigate]);
+  }, [adminEmail, navigate]);
   const handleSelect = (section) => {
     setSelectedSection(section);
   };
@@ -28,7 +29,7 @@ export default function AdminDashboard(props){
                 <div className="admin-content">
                     {selectedSection === "manage_providers" && <ProviderDataTable/>}
                     {selectedSection === 'manage_users' && <UserTable/>}
-                    {selectedSection === 'manage_ad_requests' && <AdRequestsPage/>}
+                    {selectedSection === 'manage_ad_requests' && <RentAdsPage/>}
                     {selectedSection === 'manage_messages' && <MessageList/>}
                     {selectedSection === 'manage_payments' && <PaymentTable/>}
                 </div>

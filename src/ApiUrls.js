@@ -1,5 +1,5 @@
 // const BASE_URL = "http://192.168.18.2:2346";
-const BASE_URL = "http://192.168.254.18:2346";
+const BASE_URL = "http://192.168.65.18:7344";
 // const BASE_URL = "http://10.115.149.37:2346";
 // const BASE_URL = "http://10.115.149.45:2346";
 const apiUrls = {
@@ -16,15 +16,11 @@ const apiUrls = {
   PROVIDER_PACKAGE_DELETE:`${BASE_URL}/providerapis/packagesdata/?package_id=`,
   PROVIDER_PACKAGE_UPDATE:`${BASE_URL}/providerapis/packagesdata/?package_id=`,
   PROVIDER_PACKAGE_POST:`${BASE_URL}/providerapis/packagesdata/`,
+
   // house selling ads data
-  HOUSE_SELLING_AD_GET:`${BASE_URL}/adminapis/HouseSellingAdData/`,
-  HOUSE_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/HouseSellingAdData/?id=`,
-  // apratment selling ads data
-  Apartment_SELLING_AD_GET:`${BASE_URL}/adminapis/ApartmentSellingAdData/`,
-  Apartment_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/ApartmentSellingAdData/?id=`,
- //  office selling ads data
-  Office_SELLING_AD_GET:`${BASE_URL}/adminapis/OfficeSellingAdData/`,
-  Office_SELLING_AD_UPDATE:`${BASE_URL}/adminapis/OfficeSellingAdData/?id=`,
+  RENT_AD_GET:`${BASE_URL}/adminapis/RentAdData/`,
+  RENT_AD_DELETE:`${BASE_URL}/adminapis/RentAdData/?id=`,
+
   // users data related data apis
   BUYER_GET_DATA:`${BASE_URL}/adminapis/UserSignUp/`,
   BUYER_DELETE_DATA:`${BASE_URL}/adminapis/UserSignUp/?UserId=`,
