@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Tab, Tabs, Card, Button, Modal, Table, Form, InputGroup } from 'react-bootstrap';
+import { Tab, Tabs, Card, Button, Modal, Table, Form, InputGroup, Spinner } from 'react-bootstrap';
 import apiUrls from "../../ApiUrls";
 
 const RentAdsPage = () => {
@@ -8,29 +8,39 @@ const RentAdsPage = () => {
   const [selectedAd, setSelectedAd] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch rent ads
     axios.get(`${apiUrls.RENT_AD_GET}`)
       .then((response) => setRentAds(response.data))
       .catch((error) => console.error('Error fetching rent ads:', error));
   }, []);
 
-  const handleApprove = (id) => {
-    console.log('Approve Ad:', id);
-    // Add your API call for approval here
-  };
-
-  const handleReject = (id) => {
-    console.log('Reject Ad:', id);
-    // Add your API call for rejection here
+  const handleApprove = async (id, status, email) => {
+    setLoading(true);
+    try {
+      await axios.post(apiUrls.RENT_AD_APPROVAL, {
+        requestStatus: status,
+        id: id,
+        ownerEmail: email,
+      });
+      setLoading(false);
+      window.location.reload();
+    } catch (error) {
+      setLoading(false);
+      console.error('Error updating status:', error);
+    }
   };
 
   const handleDelete = (id) => {
-    axios
-      .delete(`/adminapis/RentAdData/${id}/`)
-      .then(() => setRentAds(rentAds.filter((ad) => ad.id !== id)))
-      .catch((error) => console.error('Error deleting rent ad:', error));
+    const isConfirmed = window.confirm("Are you sure you want to delete this rent ad?");
+    if (isConfirmed) {
+      axios.delete(`${apiUrls.RENT_AD_DELETE}${id}`)
+        .then(() => {setRentAds(rentAds.filter((ad) => ad.id !== id));
+          alert("Rent ad deleted successfully.");
+        })
+        .catch((error) => console.error('Error deleting rent ad:', error));
+    }
   };
 
   const openDetails = (ad) => {
@@ -38,7 +48,6 @@ const RentAdsPage = () => {
     setShowModal(true);
   };
 
-  // Filter rent ads based on the search term
   const filteredAds = rentAds.filter((ad) => {
     return (
       ad.propertyType.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -53,8 +62,6 @@ const RentAdsPage = () => {
   return (
     <div className="container my-5">
       <h2 className="text-center mb-4">Rent Ads Management</h2>
-
-      {/* Search Bar */}
       <InputGroup className="mb-4">
         <Form.Control
           placeholder="Search by Property Type, Location, or Price"
@@ -68,7 +75,6 @@ const RentAdsPage = () => {
           filteredAds.map((ad) => (
             <div className="col-md-4 col-sm-6 mb-4" key={ad.id}>
               <Card className="shadow-lg border-0 rounded">
-                {/* Check if image exists before rendering */}
                 {ad.image && ad.image[0] && (
                   <Card.Img variant="top" src={ad.image[0]} alt="Rent Ad Image" className="card-img-top" />
                 )}
@@ -128,6 +134,10 @@ const RentAdsPage = () => {
                       <td>{selectedAd.city}</td>
                     </tr>
                     <tr>
+                      <td>Owner Email</td>
+                      <td>{selectedAd.ownerEmail}</td>
+                    </tr>
+                    <tr>
                       <td>Address</td>
                       <td>{selectedAd.address}</td>
                     </tr>
@@ -135,12 +145,23 @@ const RentAdsPage = () => {
                       <td>Description</td>
                       <td>{selectedAd.Description}</td>
                     </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td>
+                        <span style={{
+                          color: selectedAd.requestStatus === 'Approve' ? 'green' : 
+                                selectedAd.requestStatus === 'Pending' ? 'orange' : 
+                                selectedAd.requestStatus === 'Reject' ? 'red' : 'black'
+                        }}>
+                          {selectedAd.requestStatus}
+                        </span>
+                      </td>
+                    </tr>
                   </tbody>
                 </Table>
               </Tab>
               <Tab eventKey="images" title="Images">
                 <div className="d-flex flex-wrap">
-                  {/* Check if images exist */}
                   {selectedAd.images && selectedAd.images.length > 0 ? (
                     selectedAd.images.map((img, idx) => (
                       <img
@@ -159,11 +180,11 @@ const RentAdsPage = () => {
             </Tabs>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="success" onClick={() => handleApprove(selectedAd.id)}>
-              Approve
+            <Button variant="success" onClick={() => handleApprove(selectedAd.id, 'Approve', selectedAd.ownerEmail)} disabled={loading}>
+              {loading ? <Spinner animation="border" size="sm" /> : 'Approve'}
             </Button>
-            <Button variant="warning" onClick={() => handleReject(selectedAd.id)}>
-              Reject
+            <Button variant="warning" onClick={() => handleApprove(selectedAd.id, 'Reject', selectedAd.ownerEmail)} disabled={loading}>
+              {loading ? <Spinner animation="border" size="sm" /> : 'Reject'}
             </Button>
             <Button variant="secondary" onClick={closeModal}>
               Close

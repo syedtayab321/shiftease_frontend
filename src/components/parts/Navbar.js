@@ -15,18 +15,19 @@ const Navbar = () => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" href="#">Home</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to='#about'>About</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to='#about'>Services</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to='#contact'>Contact us</Link>
-                        </li>
+                        <h2>Welcome to House Ease</h2>
+                        {/*<li className="nav-item">*/}
+                        {/*    <Link className="nav-link active" aria-current="page" href="#">Home</Link>*/}
+                        {/*</li>*/}
+                        {/*<li className="nav-item">*/}
+                        {/*    <Link className="nav-link" to='#about'>About</Link>*/}
+                        {/*</li>*/}
+                        {/*<li className="nav-item">*/}
+                        {/*    <Link className="nav-link" to='#about'>Services</Link>*/}
+                        {/*</li>*/}
+                        {/*<li className="nav-item">*/}
+                        {/*    <Link className="nav-link" to='#contact'>Contact us</Link>*/}
+                        {/*</li>*/}
                     </ul>
                     <div className="d-flex">
                         <Link to='/login' className="btn btn-outline-dark me-2" type="button">Service Provider Login</Link>

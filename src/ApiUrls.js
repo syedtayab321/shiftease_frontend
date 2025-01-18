@@ -1,5 +1,5 @@
 // const BASE_URL = "http://192.168.18.2:2346";
-const BASE_URL = "http://192.168.65.18:7344";
+const BASE_URL = "http://192.168.18.2:7666";
 // const BASE_URL = "http://10.115.149.37:2346";
 // const BASE_URL = "http://10.115.149.45:2346";
 const apiUrls = {
@@ -19,7 +19,8 @@ const apiUrls = {
 
   // house selling ads data
   RENT_AD_GET:`${BASE_URL}/adminapis/RentAdData/`,
-  RENT_AD_DELETE:`${BASE_URL}/adminapis/RentAdData/?id=`,
+  RENT_AD_DELETE:`${BASE_URL}/adminapis/RentAdData/?rent_id=`,
+  RENT_AD_APPROVAL:`${BASE_URL}/adminapis/RentAdApproval/`,
 
   // users data related data apis
   BUYER_GET_DATA:`${BASE_URL}/adminapis/UserSignUp/`,
@@ -38,15 +39,15 @@ const apiUrls = {
   PROVIDER_APPROVED_ORDERS_GET:`${BASE_URL}/providerapis/ApprovedOrders/?company_id=`,
   PROVIDER_APPROVED_ORDERS_UPDATE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
   PROVIDER_APPROVED_ORDERS_DELETE:`${BASE_URL}/providerapis/ApprovedOrders/?order_id=`,
-  //  Provider Message Apis
+   //  Provider Message Apis
   PROVIDER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/providerMessage/`,
   PROVIDER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/providerMessage/?receiverName=&senderName=`,
   PROVIDER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/providerMessage/?messageId=`,
-  //  Admin Message Apis
+   //  Admin Message Apis
   ADMIN_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
   ADMIN_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
   ADMIN_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,
-//   user message apis
+   //   user message apis
    USER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
    USER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
    USER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,

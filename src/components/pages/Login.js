@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import image1 from './../../assets/images/logo_back.png'
+import image1 from './../../assets/images/logo.png'
 import {Link,useNavigate} from "react-router-dom";
 import { Formik, Field, Form} from 'formik';
 import * as Yup from 'yup';

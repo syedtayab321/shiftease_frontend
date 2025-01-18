@@ -1,6 +1,6 @@
 import Navbar from './../parts/Navbar'
 import React from "react";
-import logo from './../../assets/images/shifting.png'
+import logo from './../../assets/images/shifting.jpg'
 import {Link} from "react-router-dom";
 import  './../../assets/css/style.css'
 import Contactus from "../parts/Contactus";
