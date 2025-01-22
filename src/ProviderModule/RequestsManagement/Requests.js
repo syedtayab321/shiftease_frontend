@@ -98,6 +98,7 @@ const ClientRequests = () => {
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Price</TableCell>
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Location</TableCell>
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Date</TableCell>
+                <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Payment Method</TableCell>
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Request Status</TableCell>
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Actions</TableCell>
                 <TableCell align="center" sx={{ color: '#fff', fontWeight: 'bold' }}>Delete</TableCell>
@@ -114,6 +115,7 @@ const ClientRequests = () => {
                     <TableCell align="center">${request.package_price}</TableCell>
                     <TableCell align="center">{request.location}</TableCell>
                     <TableCell align="center">{request.service_date}</TableCell>
+                    <TableCell align="center">{request.payment_method}</TableCell>
                     <TableCell align="center">
                       <Badge
                         badgeContent={request.request_status}

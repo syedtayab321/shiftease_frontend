@@ -59,9 +59,9 @@ export default function Sidebar({ onselect }) {
               <ListItemIcon><PaymentIcon /></ListItemIcon>
               <ListItemText primary="Manage Payments" />
             </ListItem>
-            <ListItem button onClick={() => onselect('manage_requests')}>
+            <ListItem button onClick={() => onselect('manage_complaints')}>
               <ListItemIcon><HelpIcon /></ListItemIcon>
-              <ListItemText primary="Manage Help Requests" />
+              <ListItemText primary="Manage Complaints" />
             </ListItem>
             <ListItem button onClick={() => onselect('manage_messages')}>
               <ListItemIcon><MessageIcon /></ListItemIcon>

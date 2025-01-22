@@ -10,6 +10,9 @@ import AdminLogin from "./AdminModule/AdminLogin";
 import AdminDashboard from "./AdminModule/AdminDashboard";
 import React from "react";
 import Rejection from "./components/pages/Rejection";
+import ForgotPassword from "./ProviderModule/ForgotPassword/ForgotPassword";
+import VerifyCode from "./ProviderModule/ForgotPassword/VerifyCode";
+import ResetPassword from "./ProviderModule/ForgotPassword/ResetPassword";
 function App() {
   return (
     <>
@@ -22,6 +25,9 @@ function App() {
         <Route path='/admin' Component={AdminLogin}></Route>
         <Route path='/admindashboard' Component={AdminDashboard}></Route>
         <Route path='/rejection' Component={Rejection}></Route>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Modal, Button, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import apiUrls from "../../ApiUrls"; // Assuming you have the correct API URLs here
+import apiUrls from "../../ApiUrls";
 
 const RequestApprovalModal = ({ request, closeModal,fetchdata }) => {
   const [team, setTeam] = useState("");
@@ -18,7 +18,7 @@ const RequestApprovalModal = ({ request, closeModal,fetchdata }) => {
       }
     } catch (error) {
       console.error("Error fetching packages data:", error);
-      alert("No team member data found");
+
     }
   };
 
@@ -38,14 +38,15 @@ const RequestApprovalModal = ({ request, closeModal,fetchdata }) => {
       package_price:request.package_price,
       service_date: serviceDate,
       order_status:'Processing',
-      Company_id:request.Company_id
+      Company_id:request.Company_id,
+      payment_method:request.payment_method,
     };
 
     try {
       await axios.post(`${apiUrls.PROVIDER_ORDER_REQUEST_APPROVAL}`, requestData);
       alert(`Request approved for client ${request.client_name}`);
       closeModal();
-      handleDeleteRequest(request.id)
+      await handleDeleteRequest(request.id)
     } catch (error) {
       console.error("Error approving request:", error);
       alert("Failed to approve the request.");

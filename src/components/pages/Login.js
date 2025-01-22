@@ -69,7 +69,7 @@ export  default function ProviderLogin(){
                                 <Field type="password" id="password" name="password" placeholder="********" required/>
                                 {errors.password && <div className="error text text-danger">{errors.password}</div>}
                                 <div className="options">
-                                    <a href="#">Forgot password?</a>
+                                    <Link to="/forgot-password" target='_blank'>Forgot password?</Link>
                                 </div>
 
                                 <button type="submit" className="sign-in-btn">Sign In</button>

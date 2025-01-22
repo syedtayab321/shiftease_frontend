@@ -4,10 +4,11 @@ import Sidebar from "./Components/Sidebar";
 import ProviderDataTable from "./ManageServiceProviders/ProvidersData";
 import {useNavigate} from "react-router-dom";
 import UserTable from "./ManageUsers/UserTable";
-
 import MessageList from './ManageMessages/MessagePage';
 import PaymentTable from './ManagePayments/PaymentViewPage';
 import RentAdsPage from "./ManageAdsRequests/AdRequests";
+
+import ComplaintPage from './ManageComplaints/Complaints';
 export default function AdminDashboard(props){
   const [selectedSection, setSelectedSection] = useState('manage_providers');
     const adminEmail = localStorage.getItem('adminEmail');
@@ -32,6 +33,7 @@ export default function AdminDashboard(props){
                     {selectedSection === 'manage_ad_requests' && <RentAdsPage/>}
                     {selectedSection === 'manage_messages' && <MessageList/>}
                     {selectedSection === 'manage_payments' && <PaymentTable/>}
+                    {selectedSection === 'manage_complaints' && <ComplaintPage/>}
                 </div>
             </div>
         </>

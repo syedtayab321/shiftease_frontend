@@ -1,7 +1,4 @@
-// const BASE_URL = "http://192.168.18.2:2346";
-const BASE_URL = "http://192.168.18.2:7666";
-// const BASE_URL = "http://10.115.149.37:2346";
-// const BASE_URL = "http://10.115.149.45:2346";
+const BASE_URL = "http://192.168.1.107:7666";
 const apiUrls = {
   MAIN_URL:`${BASE_URL}`,
   // provider realted data apis
@@ -51,6 +48,14 @@ const apiUrls = {
    USER_MESSAGE_API_POST:`${BASE_URL}/MessageApis/adminMessage/`,
    USER_MESSAGE_API_GET:`${BASE_URL}/MessageApis/adminMessage/?receiverName=&senderName=`,
    USER_MESSAGE_API_DELETE:`${BASE_URL}/MessageApis/adminMessage/?messageId=`,
+
+   RESET_PROVIDER_PASSSOWRD:`${BASE_URL}/Providerforgotpassword/reset-password/`,
+   FORGOT_PROVIDER_PASSSOWRD:`${BASE_URL}/Providerforgotpassword/forgot-password/`,
+   VERIFY_CODE:`${BASE_URL}/Providerforgotpassword/verify-code/`,
+
+   ADMIN_COMPLAINTS:'${BASE_URL}/adminapis/complaints',
+
+   PACKAGE_PAYMENTS:`${BASE_URL}/providerapis/packagePayments/`
 };
 
 export default apiUrls;

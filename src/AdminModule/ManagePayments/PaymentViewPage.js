@@ -3,7 +3,8 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Container, Avatar, Button
 } from '@mui/material';
 import { styled } from '@mui/system';
-
+import axios from 'axios';
+import apiUrls from './../../ApiUrls'
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold',
   backgroundColor: '#f5f5f5',
@@ -24,13 +25,16 @@ const PaymentTable = () => {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    // Replace with real API call
-    const paymentData = [
-      { id: 1, username: 'John Doe', email: 'johndoe@example.com', amount: 100, date: '2024-10-01', avatar: 'https://i.pravatar.cc/150?img=1' },
-      { id: 2, username: 'Jane Smith', email: 'janesmith@example.com', amount: 250, date: '2024-09-21', avatar: 'https://i.pravatar.cc/150?img=2' },
-      { id: 3, username: 'Alice Johnson', email: 'alicej@example.com', amount: 150, date: '2024-09-18', avatar: 'https://i.pravatar.cc/150?img=3' },
-    ];
-    setPayments(paymentData);
+    // Fetch data from the Django API
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get(`${apiUrls.PACKAGE_PAYMENTS}`);
+        setPayments(response.data);
+      } catch (error) {
+        console.error('Error fetching payment data:', error);
+      }
+    };
+    fetchPayments();
   }, []);
 
   return (
@@ -57,8 +61,7 @@ const PaymentTable = () => {
             <TableRow>
               <StyledTableCell>Avatar</StyledTableCell>
               <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell>User Name</StyledTableCell>
-              <StyledTableCell>Email</StyledTableCell>
+              <StyledTableCell>Package Title</StyledTableCell>
               <StyledTableCell>Amount</StyledTableCell>
               <StyledTableCell>Date</StyledTableCell>
               <StyledTableCell>Action</StyledTableCell>
@@ -68,13 +71,12 @@ const PaymentTable = () => {
             {payments.map((payment) => (
               <StyledTableRow key={payment.id}>
                 <TableCell>
-                  <Avatar alt={payment.username} src={payment.avatar} />
+                  <Avatar alt={payment.package_title} src={`https://via.placeholder.com/150`} />
                 </TableCell>
                 <TableCell>{payment.id}</TableCell>
-                <TableCell>{payment.username}</TableCell>
-                <TableCell>{payment.email}</TableCell>
+                <TableCell>{payment.package_title}</TableCell>
                 <TableCell>${payment.amount}</TableCell>
-                <TableCell>{payment.date}</TableCell>
+                <TableCell>{new Date(payment.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
